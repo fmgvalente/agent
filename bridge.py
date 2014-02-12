@@ -3,6 +3,15 @@ import pxssh
 import re
 
 
+
+#	config
+
+remote_host = "login-hpc.ceta-ciemat.es"
+remote_login = "fmvalente"
+#
+#
+#
+
 COMMAND_LINE = re.compile(r"fmvalente@login-hpc-01 .*\]\$")
 
 
@@ -20,7 +29,7 @@ class Bridge:
 	def __init__(self):
 		try:
 			self.ssh = pxssh.pxssh()
-			self.ssh.login("login-hpc.ceta-ciemat.es","fmvalente")
+			self.ssh.login(remote_host,remote_login)
 			
 			#fout = file('mylog.txt','w')
 			#self.ssh.logfile = fout
@@ -38,7 +47,7 @@ class Bridge:
 		self.ssh.sendline("python agent/agent.py")
 		self.ssh.prompt()
 		files = self.ssh.before.replace(".py", "").split()[3:] #first 3 splits are ls --color path
-		return files	
+		return files
 
 	def jobs(self):
 		self.ssh.sendline("sinfo")
@@ -63,7 +72,7 @@ if __name__ == "__main__":
 	print(x.modules())
 	#print(x.jobs())
 	#print(x.scheduleWorkflow())
-	print(x.workflows())
+	#print(x.workflows())
 
 	print("thats it")
 
