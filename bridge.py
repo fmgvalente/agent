@@ -70,8 +70,6 @@ class Bridge:
 if __name__ == "__main__":
 
 	x = Bridge()
-	
-
 
 	print("listing modules:")
 	print(x.modules())
@@ -80,9 +78,8 @@ if __name__ == "__main__":
 	for item in x.modules():
 		print(item)
 		print(type(item))
-	print(x.modules[0])
-	z=["a","b"]
-	print(z)
+	print(x.modules()[0])
+
 	#print(x.jobs())
 	#print(x.scheduleWorkflow())
 	#print(x.workflows())
