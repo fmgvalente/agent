@@ -40,8 +40,13 @@ class Agent(object):
 
 
 if __name__ == "__main__":
-	print ("running agent:")
+	import sys
 	agent = Agent()
+
+	for arg in sys.argv:
+		if(arg == "-m"): print(agent.modules())
+
+
 #	print("modules:")
 #	print(x.modules())
 #	print("workflows:")

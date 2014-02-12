@@ -44,7 +44,7 @@ class Bridge:
 
 
 	def modules(self):
-		self.ssh.sendline("python agent/agent.py")
+		self.ssh.sendline("python agent/agent.py -m")
 		self.ssh.prompt()
 		files = self.ssh.before.replace(".py", "").split()[3:] #first 3 splits are ls --color path
 		return files
@@ -67,7 +67,11 @@ class Bridge:
 		return files
 
 if __name__ == "__main__":
+
 	x = Bridge()
+	
+
+
 	print("mods: ")
 	print(x.modules())
 	#print(x.jobs())
