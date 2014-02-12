@@ -7,8 +7,6 @@ import os
 #general configuration
 modules_path = os.path.dirname(os.path.realpath(__file__))+"/modules"
 
-print (modules_path)
-
 class Agent(object):
 	
 	"""Implements job monitoring"""
