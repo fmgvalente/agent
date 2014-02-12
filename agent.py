@@ -13,7 +13,6 @@ class Agent(object):
 	
 	"""Implements job monitoring"""
 	def __init__(self):
-		print("initializing agent")
 		sys.path = [sys.path, modules_path]
 		
 	def modules(self):
