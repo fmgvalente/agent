@@ -1,6 +1,7 @@
 
 import sys
 import subprocess
+import glob
 
 class Agent(object):
 	
@@ -10,14 +11,12 @@ class Agent(object):
 		sys.path = [sys.path,"./modules"]
 		
 	def modules(self):
-		out = subprocess.check_output(["ls", "--color=never", "modules"])
-		files = out.split()
-		return files
+		modules = glob.glob('modules/*.py')
+		return [x[8:-3] for x in modules]
 
 	def workflows(self):
-		out = subprocess.check_output(["ls", "--color=never", "workflows"])
-		files = out.split()
-		return files
+		return glob.glob('workflows/*.py')
+
 
 	def datasets(self):
 		out = subprocess.check_output(["ls", "--color=never", "datasets"])
@@ -26,7 +25,6 @@ class Agent(object):
 
 	def progress(self, job_id):
 		return 0.42
-
 
 	def scheduleWorkflow(self):
 		return 42
@@ -40,9 +38,9 @@ if __name__ == "__main__":
 	x = Agent()
 	print("modules:")
 	print(x.modules())
-	print("workflows")
+	print("workflows:")
 	print(x.workflows())
-	print("datasets")
+	print("datasets:")
 	print(x.datasets())
 
 

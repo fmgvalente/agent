@@ -1,10 +1,10 @@
+import module
 
 
-
-a = module("feature_extraction")
-b = module("void")
-c = module("void")
-d = module("text_printer")
+a = Module("feature_extraction")
+b = Module("void")
+c = Module("void")
+d = Module("text_printer")
 
 
 
