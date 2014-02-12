@@ -2,17 +2,23 @@
 import sys
 import subprocess
 import glob
+import os
+
+#general configuration
+modules_path = os.path.dirname(os.path.realpath(__file__))+"/modules"
+
+print (modules_path)
 
 class Agent(object):
 	
 	"""Implements job monitoring"""
 	def __init__(self):
 		print("initializing agent")
-		sys.path = [sys.path,"./modules"]
+		sys.path = [sys.path, modules_path]
 		
 	def modules(self):
-		modules = glob.glob('modules/*.py')
-		return [x[8:-3] for x in modules]
+		modules = glob.glob(modules_path+'/*.py')
+		return [x[len(modules_path)+1:-3] for x in modules]
 
 	def workflows(self):
 		return glob.glob('workflows/*.py')
