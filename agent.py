@@ -43,7 +43,7 @@ if __name__ == "__main__":
 	for arg in sys.argv:
 		if(arg == "-m"):
 			for item in agent.modules():
-				print item
+				print(item)
 
 
 #	print("modules:")
