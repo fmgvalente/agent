@@ -41,13 +41,13 @@ class Agent(object):
 
 if __name__ == "__main__":
 	print ("running agent:")
-	x = Agent()
-	print("modules:")
-	print(x.modules())
-	print("workflows:")
-	print(x.workflows())
-	print("datasets:")
-	print(x.datasets())
+	agent = Agent()
+#	print("modules:")
+#	print(x.modules())
+#	print("workflows:")
+#	print(x.workflows())
+#	print("datasets:")
+#	print(x.datasets())
 
 
 
