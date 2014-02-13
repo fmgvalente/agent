@@ -1,6 +1,7 @@
 
 import pxssh
 import re
+import logging
 
 
 
@@ -57,13 +58,14 @@ class Bridge:
 		return files
 
 	def scheduleWorkflow(self, workflow_name):
-		self.ssh.sendline(agent+"-w "+name)
+		self.ssh.sendline(agent+"-w "+workflow_name)
 		self.ssh.prompt()
 		return self.ssh.before
 
 
 if __name__ == "__main__":
 
+	logging.getLogger(__name__)
 	bridge = Bridge()
 
 	print("listing modules:")

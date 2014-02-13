@@ -3,6 +3,8 @@ import sys
 import subprocess
 import glob
 import os
+import logging
+
 
 #general configuration
 modules_path = os.path.dirname(os.path.realpath(__file__))+"/modules"
@@ -42,29 +44,29 @@ class Agent(object):
 
 
 if __name__ == "__main__":
-	import sys
+	log = logging.getLogger(__name__)
+
 	agent = Agent()
 
-	for arg in sys.argv:
-		if(arg == "-m"):
+	i = 1
+	while i < len(sys.argv):
+		if(sys.argv[i] == "-m"):
+			log.info("called agent with -m (request modules)")
 			for item in agent.modules():
 				print(item)
+			i+=1
 
-		if(arg == "-w"):
+		if(sys.argv[i] == "-w"):
+			log.info("called agent with -w (request workflows)")
 			for item in agent.workflows():
 				print(item)
+			i+=1
 
-
-
-#	print("modules:")
-#	print(x.modules())
-#	print("workflows:")
-#	print(x.workflows())
-#	print("datasets:")
-#	print(x.datasets())
-
-
-
+		if(sys.argv[i] == "-s" and i+1 < len(sys.argv)):
+			log.info("called agent with -s (schedule workflow):"+argv[i+1])
+			for item in agent.workflows():
+				print(item)
+			i+=2
 
 
 
