@@ -58,7 +58,7 @@ class Bridge:
 		return files
 
 	def scheduleWorkflow(self, workflow_name):
-		self.ssh.sendline(agent+"-w "+workflow_name)
+		self.ssh.sendline(agent+"-s "+workflow_name)
 		self.ssh.prompt()
 		return self.ssh.before
 
@@ -74,7 +74,7 @@ if __name__ == "__main__":
 	print("listing workflows:")
 	print(bridge.workflows())
 
-	bridge.scheduleWorkflow(bridge.workflows()[0])
+	bridge.scheduleWorkflow("test")
 
 
 

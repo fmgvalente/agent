@@ -4,6 +4,7 @@ import subprocess
 import glob
 import os
 import logging
+import workflow
 
 
 #general configuration
@@ -70,8 +71,9 @@ if __name__ == "__main__":
 
 		if(sys.argv[i] == "-s" and i+1 < len(sys.argv)):
 			logging.info("called agent with -s (schedule workflow):"+sys.argv[i+1])
-			for item in agent.workflows():
-				print(item)
+			
+			#creates workflow
+			flow = workflow(argv[i+1])
 			i+=2
 			continue
 
