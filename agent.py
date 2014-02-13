@@ -4,14 +4,15 @@ import subprocess
 import glob
 import os
 import logging
-import workflow
+from workflow import Workflow
 
 
 #general configuration
 agent_path = os.path.dirname(os.path.realpath(__file__))
 modules_path = os.path.dirname(os.path.realpath(__file__))+"/modules"
 workflows_path = os.path.dirname(os.path.realpath(__file__))+"/workflows"
-logging.basicConfig(filename='agent.log',level=logging.DEBUG)
+
+logging.basicConfig(filename='agent.log',level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 
@@ -51,38 +52,50 @@ class Agent(object):
 
 if __name__ == "__main__":
 	logging.info("called agent with: "+repr(sys.argv))
+
+	#adds module and workflow directories to python's search path
+	sys.path.append(agent_path)
+	sys.path.append(modules_path)
+	sys.path.append(workflows_path)
+
+
 	agent = Agent()
+	try:
 
-	i = 1
-	while i < len(sys.argv):
-		if(sys.argv[i] == "-m"):
-			logging.info("called agent with -m (request modules)")
-			for item in agent.modules():
-				print(item)
-			i+=1
-			continue
+		i = 1
+		while i < len(sys.argv):
+			if(sys.argv[i] == "-m"):
+				logging.info("called agent with -m (request modules)")
+				for item in agent.modules():
+					print(item)
+				i+=1
+				continue
 
-		if(sys.argv[i] == "-w"):
-			logging.info("called agent with -w (request workflows)")
-			for item in agent.workflows():
-				print(item)
-			i+=1
-			continue
+			if(sys.argv[i] == "-w"):
+				logging.info("called agent with -w (request workflows)")
+				for item in agent.workflows():
+					print(item)
+				i+=1
+				continue
 
-		if(sys.argv[i] == "-s" and i+1 < len(sys.argv)):
-			logging.info("called agent with -s (schedule workflow):"+sys.argv[i+1])
-			
-			#creates workflow
-			flow = workflow(argv[i+1])
-			i+=2
-			continue
-
-
-		logging.info("wrong parameters?")
-		logging.info(sys.argv[i])
-		quit()
+			if(sys.argv[i] == "-s" and i+1 < len(sys.argv)):
+				logging.info("called agent with -s (schedule workflow):"+sys.argv[i+1])
+				
+				#creates workflow
+				flow = Workflow(sys.argv[i+1])
+				print(flow.job_id)
+				i+=2
+				continue
 
 
+			logging.info("wrong parameters?")
+			logging.info(sys.argv[i])
+			quit()
+
+	except Exception as e:
+		logging.exception(e)
+		print("A nasty exception was caught. Check the log for more details...")
+		print(e)
 
 
 

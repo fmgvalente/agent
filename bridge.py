@@ -65,7 +65,6 @@ class Bridge:
 
 if __name__ == "__main__":
 
-	logging.getLogger(__name__)
 	bridge = Bridge()
 
 	print("listing modules:")
