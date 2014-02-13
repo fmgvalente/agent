@@ -5,14 +5,13 @@ class Module:
 
 	def __init__(self, module_name):
 		self.module_name = module_name
+		self.links = []
 		try:
 			self.mod = __import__(self.module_name)
 		except:
 			print("failure importing module {}".format(self.module_name))
 		
 		print("succesfully loaded {}, containing: {}".format(self.module_name, dir(self.mod)))
-
-
 
 
 	def run(self, output_dir_path):
@@ -24,6 +23,8 @@ class Module:
 	def enforce_directory_structure(self, directory):
 		os.makedirs(directory, exist_ok=True)
 
+	def __rshift__(self, other):
+		other.links.append(self)
 
 
 if __name__ == "__main__":

@@ -1,18 +1,16 @@
 import module
 
 
-a = Module("feature_extraction")
-b = Module("void")
-c = Module("void")
-d = Module("text_printer")
+class workflow:
 
+	def schedule(self, workflow_name):
+		
+		pass
 
+	def progress:
+		return 0.0
 
-flow = [("a",["b","c","d"]),("c",["d"])]
-
-
-
-
+	def
 
 if __name__ == "__main__":
 	print("testing workflow")

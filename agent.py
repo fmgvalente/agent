@@ -35,6 +35,9 @@ class Agent(object):
 	def cancelWorkflow():
 		pass
 
+	def signal_state_change():
+		pass
+
 
 if __name__ == "__main__":
 	import sys

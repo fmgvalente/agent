@@ -50,22 +50,17 @@ class Bridge:
 		files = self.ssh.before.split()[3:] #first 3 splits are python aget.py -m
 		return files
 
-	def jobs(self):
-		self.ssh.sendline(agent+"-m")
-		self.ssh.prompt()
-		return self.ssh.before
-
-
-	def scheduleWorkflow(self):
-		self.ssh.sendline(agent+"-m")
-		self.ssh.prompt()
-		return self.ssh.before
-
 	def workflows(self):
 		self.ssh.sendline(agent+"-w")
 		self.ssh.prompt()
 		files = self.ssh.before.replace(".py", "").split()[3:] #first 3 splits are ls --color path
 		return files
+
+	def scheduleWorkflow(self, workflow_name):
+		self.ssh.sendline(agent+"-w "+name)
+		self.ssh.prompt()
+		return self.ssh.before
+
 
 if __name__ == "__main__":
 
@@ -74,10 +69,10 @@ if __name__ == "__main__":
 	print("listing modules:")
 	print(bridge.modules())
 
-	#print(x.jobs())
-	#print(x.scheduleWorkflow())
-	#print(x.workflows())
+	print("listing workflows:")
+	print(bridge.workflows())
 
+	bridge.scheduleWorkflow(bridge.workflows()[0])
 
 
 
