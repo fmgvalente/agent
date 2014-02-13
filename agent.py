@@ -6,6 +6,7 @@ import os
 
 #general configuration
 modules_path = os.path.dirname(os.path.realpath(__file__))+"/modules"
+workflows_path = os.path.dirname(os.path.realpath(__file__))+"/workflows"
 
 class Agent(object):
 	
@@ -18,7 +19,8 @@ class Agent(object):
 		return [x[len(modules_path)+1:-3] for x in modules]
 
 	def workflows(self):
-		return glob.glob('workflows/*.py')
+		workflows = glob.glob('workflows/*.py')
+		return [x[len(workflows_path)+1:-3] for x in workflows]
 
 
 	def datasets(self):
