@@ -69,7 +69,7 @@ if __name__ == "__main__":
 			continue
 
 		if(sys.argv[i] == "-s" and i+1 < len(sys.argv)):
-			logging.info("called agent with -s (schedule workflow):"+argv[i+1])
+			logging.info("called agent with -s (schedule workflow):"+sys.argv[i+1])
 			for item in agent.workflows():
 				print(item)
 			i+=2
