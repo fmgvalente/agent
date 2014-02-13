@@ -49,7 +49,7 @@ if __name__ == "__main__":
 				print(item)
 
 		if(arg == "-w"):
-			for item in agent.modules():
+			for item in agent.workflows():
 				print(item)
 
 
