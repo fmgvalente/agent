@@ -78,6 +78,7 @@ if __name__ == "__main__":
 
 		logging.info("wrong parameters?")
 		logging.info(sys.argv[i])
+		quit()
 
 
 
