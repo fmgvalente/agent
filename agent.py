@@ -19,7 +19,7 @@ class Agent(object):
 		return [x[len(modules_path)+1:-3] for x in modules]
 
 	def workflows(self):
-		workf = glob.glob('workflows/*.py')
+		work = glob.glob('workflows/*.py')
 		print(work)
 		return [x[len(workflows_path)+1:-3] for x in work]
 
