@@ -55,18 +55,25 @@ if __name__ == "__main__":
 			for item in agent.modules():
 				print(item)
 			i+=1
+			continue
 
 		if(sys.argv[i] == "-w"):
 			log.info("called agent with -w (request workflows)")
 			for item in agent.workflows():
 				print(item)
 			i+=1
+			continue
 
 		if(sys.argv[i] == "-s" and i+1 < len(sys.argv)):
 			log.info("called agent with -s (schedule workflow):"+argv[i+1])
 			for item in agent.workflows():
 				print(item)
 			i+=2
+			continue
+
+
+		log.info("called with no parameters, or wrong parameters:")
+		log.info(sys.argv)
 
 
 
