@@ -9,6 +9,10 @@ import logging
 #general configuration
 modules_path = os.path.dirname(os.path.realpath(__file__))+"/modules"
 workflows_path = os.path.dirname(os.path.realpath(__file__))+"/workflows"
+logging.basicConfig(filename='agent.log',level=logging.DEBUG)
+
+
+
 
 class Agent(object):
 	
@@ -44,36 +48,35 @@ class Agent(object):
 
 
 if __name__ == "__main__":
-	log = logging.getLogger(__name__)
-
+	logging.info("called agent with: "+repr(sys.argv))
 	agent = Agent()
 
 	i = 1
 	while i < len(sys.argv):
 		if(sys.argv[i] == "-m"):
-			log.info("called agent with -m (request modules)")
+			logging.info("called agent with -m (request modules)")
 			for item in agent.modules():
 				print(item)
 			i+=1
 			continue
 
 		if(sys.argv[i] == "-w"):
-			log.info("called agent with -w (request workflows)")
+			logging.info("called agent with -w (request workflows)")
 			for item in agent.workflows():
 				print(item)
 			i+=1
 			continue
 
 		if(sys.argv[i] == "-s" and i+1 < len(sys.argv)):
-			log.info("called agent with -s (schedule workflow):"+argv[i+1])
+			logging.info("called agent with -s (schedule workflow):"+argv[i+1])
 			for item in agent.workflows():
 				print(item)
 			i+=2
 			continue
 
 
-		log.info("called with no parameters, or wrong parameters:")
-		log.info(sys.argv)
+		logging.info("wrong parameters?")
+		logging.info(sys.argv[i])
 
 
 
