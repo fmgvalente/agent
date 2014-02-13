@@ -48,6 +48,11 @@ if __name__ == "__main__":
 			for item in agent.modules():
 				print(item)
 
+		if(arg == "-w"):
+			for item in agent.modules():
+				print(item)
+
+
 
 #	print("modules:")
 #	print(x.modules())
