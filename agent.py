@@ -84,6 +84,7 @@ if __name__ == "__main__":
 				#creates workflow
 				flow = Workflow(sys.argv[i+1])
 				print(flow.job_id)
+				print(repr(flow))
 				i+=2
 				continue
 
