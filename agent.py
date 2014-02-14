@@ -29,8 +29,8 @@ class Agent(object):
 
 
 	def init_persistent_state(self):		
-		if(not 'job_id_counter' in self.state):
-			self.state['job_id_counter'] = 0
+		if(not 'id_counter' in self.state):
+			self.state['id_counter'] = 0
 
 
 	def modules(self):
@@ -58,6 +58,9 @@ class Agent(object):
 
 	def signal_state_change():
 		pass
+
+	def id_get_and_increment(self):
+		self.state['id_counter'] += 1
 
 
 if __name__ == "__main__":
@@ -93,10 +96,9 @@ if __name__ == "__main__":
 				logging.info("called agent with -s (schedule workflow):"+sys.argv[i+1])
 				
 				#creates workflow
-				flow = Workflow(sys.argv[i+1], state[job_id])
+				flow = Workflow(sys.argv[i+1], agent.id_get_and_increment())
 				print(flow.job_id)
 				print(repr(flow))
-				state[job_id]+=1
 				i+=2
 				continue
 
