@@ -22,9 +22,20 @@ logging.basicConfig(filename='agent.log',level=logging.DEBUG, format='%(asctime)
 class Agent(object):
 	
 	"""Implements job monitoring"""
-	def __init__(self):
+	def __init__(self, persistent_state):
 		sys.path = [sys.path, modules_path]
+		self.state = persistent_state
+		self.init_persistent_state()
+
+
+	def init_persistent_state(self):
+		#self.state = shelve.open(persistent_state_filepath, writeback=True)
 		
+		
+		if(not self.state.has_key('job_id_counter')):
+			self.state['job_id_counter'] = 0
+
+
 	def modules(self):
 		modules = glob.glob(modules_path+'/*.py')
 		return [x[len(modules_path)+1:-3] for x in modules]
@@ -60,9 +71,9 @@ if __name__ == "__main__":
 	sys.path.append(modules_path)
 	sys.path.append(workflows_path)
 
-	state = shelve.open(persistent_state_filepath, );
+	persistent_state = shelve.open(persistent_state_filepath, writeback=True)
 
-	agent = Agent()
+	agent = Agent(persistent_state)
 	try:
 
 		i = 1
@@ -102,7 +113,7 @@ if __name__ == "__main__":
 		print("A nasty exception was caught. Check the log for more details...")
 		print(e)
 
-	state.close()
+	persistent_state.close()
 
 
 
