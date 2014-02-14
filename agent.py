@@ -85,10 +85,10 @@ if __name__ == "__main__":
 				logging.info("called agent with -s (schedule workflow):"+sys.argv[i+1])
 				
 				#creates workflow
-				flow = Workflow(sys.argv[i+1], state.job_id)
+				flow = Workflow(sys.argv[i+1], state[job_id])
 				print(flow.job_id)
 				print(repr(flow))
-				state.job_id+=1
+				state[job_id+]=1
 				i+=2
 				continue
 
