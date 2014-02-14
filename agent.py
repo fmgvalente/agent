@@ -98,6 +98,7 @@ if __name__ == "__main__":
 				
 				#creates workflow
 				flow = Workflow(sys.argv[i+1], agent.id_increment_and_get())
+				flow.launch()
 				print(flow.job_id)
 				print(repr(flow))
 				i+=2

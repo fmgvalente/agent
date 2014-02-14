@@ -67,7 +67,8 @@ if __name__ == "__main__":
 	print(bridge.workflows())
 
 	print ("scheduling workflow: test")
-	bridge.scheduleWorkflow("test")
+	id = bridge.scheduleWorkflow("test")
+	print(id)
 
 
 
