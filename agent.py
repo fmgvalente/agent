@@ -59,8 +59,9 @@ class Agent(object):
 	def signal_state_change():
 		pass
 
-	def id_get_and_increment(self):
+	def id_increment_and_get(self):
 		self.state['id_counter'] += 1
+		return self.state['id_counter']
 
 
 if __name__ == "__main__":
@@ -96,7 +97,7 @@ if __name__ == "__main__":
 				logging.info("called agent with -s (schedule workflow):"+sys.argv[i+1])
 				
 				#creates workflow
-				flow = Workflow(sys.argv[i+1], agent.id_get_and_increment())
+				flow = Workflow(sys.argv[i+1], agent.id_increment_and_get())
 				print(flow.job_id)
 				print(repr(flow))
 				i+=2
