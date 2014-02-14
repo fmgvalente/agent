@@ -28,11 +28,8 @@ class Agent(object):
 		self.init_persistent_state()
 
 
-	def init_persistent_state(self):
-		#self.state = shelve.open(persistent_state_filepath, writeback=True)
-		
-		
-		if(not self.state.has_key('job_id_counter')):
+	def init_persistent_state(self):		
+		if(not 'job_id_counter' in self.state):
 			self.state['job_id_counter'] = 0
 
 
