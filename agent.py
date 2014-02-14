@@ -4,6 +4,7 @@ import subprocess
 import glob
 import os
 import logging
+import shelve
 from workflow import Workflow
 
 
@@ -11,6 +12,7 @@ from workflow import Workflow
 agent_path = os.path.dirname(os.path.realpath(__file__))
 modules_path = os.path.dirname(os.path.realpath(__file__))+"/modules"
 workflows_path = os.path.dirname(os.path.realpath(__file__))+"/workflows"
+persistent_state_filepath = os.path.dirname(os.path.realpath(__file__))+"/persistentstate"
 
 logging.basicConfig(filename='agent.log',level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -58,6 +60,7 @@ if __name__ == "__main__":
 	sys.path.append(modules_path)
 	sys.path.append(workflows_path)
 
+	state = shelve.open(persistent_state_filepath, );
 
 	agent = Agent()
 	try:
@@ -82,9 +85,10 @@ if __name__ == "__main__":
 				logging.info("called agent with -s (schedule workflow):"+sys.argv[i+1])
 				
 				#creates workflow
-				flow = Workflow(sys.argv[i+1])
+				flow = Workflow(sys.argv[i+1], state.job_id)
 				print(flow.job_id)
 				print(repr(flow))
+				state.job_id+=1
 				i+=2
 				continue
 
@@ -98,7 +102,7 @@ if __name__ == "__main__":
 		print("A nasty exception was caught. Check the log for more details...")
 		print(e)
 
-
+	state.close()
 
 
 

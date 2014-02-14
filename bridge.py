@@ -32,18 +32,10 @@ class Bridge:
 		try:
 			self.ssh = pxssh.pxssh()
 			self.ssh.login(remote_host,remote_login)
-			
-			#fout = file('mylog.txt','w')
-			#self.ssh.logfile = fout
-
-			#self.ssh.logout()
-
 
 		except pxssh.ExceptionPxssh as e:
 			print("ssh login failure.")
 			print(e)
-
-
 
 	def modules(self):
 		self.ssh.sendline(agent+"-m")
@@ -60,6 +52,7 @@ class Bridge:
 	def scheduleWorkflow(self, workflow_name):
 		self.ssh.sendline(agent+"-s "+workflow_name)
 		self.ssh.prompt()
+		print (self.ssh.before)
 		return self.ssh.before
 
 
@@ -73,6 +66,7 @@ if __name__ == "__main__":
 	print("listing workflows:")
 	print(bridge.workflows())
 
+	print ("scheduling workflow: test")
 	bridge.scheduleWorkflow("test")
 
 
