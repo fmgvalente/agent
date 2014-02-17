@@ -2,17 +2,11 @@
 import sys
 import subprocess
 import glob
-import os
 import logging
 import shelve
 from workflow import Workflow
+import settings
 
-
-#general configuration
-agent_path = os.path.dirname(os.path.realpath(__file__))
-modules_path = os.path.dirname(os.path.realpath(__file__))+"/modules"
-workflows_path = os.path.dirname(os.path.realpath(__file__))+"/workflows"
-persistent_state_filepath = os.path.dirname(os.path.realpath(__file__))+"/persistentstate"
 
 logging.basicConfig(filename='agent.log',level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -72,7 +66,7 @@ if __name__ == "__main__":
 	sys.path.append(modules_path)
 	sys.path.append(workflows_path)
 
-	persistent_state = shelve.open(persistent_state_filepath, writeback=True)
+	persistent_state = shelve.open(persistent_state_path, writeback=True)
 
 	agent = Agent(persistent_state)
 	try:

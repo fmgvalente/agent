@@ -19,11 +19,6 @@ COMMAND_LINE = re.compile(r"fmvalente@login-hpc-01 .*\]\$")
 
 #	Comm gateway with grid
 #	TODO: cache responses
-#
-#
-#
-#
-#
 
 
 class Bridge:
