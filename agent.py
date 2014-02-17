@@ -28,12 +28,12 @@ class Agent(object):
 
 
 	def modules(self):
-		modules = glob.glob(modules_path+'/*.py')
-		return [x[len(modules_path)+1:-3] for x in modules]
+		modules = glob.glob(settings.modules_path+'/*.py')
+		return [x[len(settings.modules_path)+1:-3] for x in modules]
 
 	def workflows(self):
-		work = glob.glob(workflows_path+'/*.py')
-		return [x[len(workflows_path)+1:-3] for x in work]
+		work = glob.glob(settings.workflows_path+'/*.py')
+		return [x[len(settings.workflows_path)+1:-3] for x in work]
 
 
 	def datasets(self):
