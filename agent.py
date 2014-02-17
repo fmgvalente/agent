@@ -62,11 +62,11 @@ if __name__ == "__main__":
 	logging.info("called agent with: "+repr(sys.argv))
 
 	#adds module and workflow directories to python's search path
-	sys.path.append(agent_path)
-	sys.path.append(modules_path)
-	sys.path.append(workflows_path)
+	sys.path.append(settings.agent_path)
+	sys.path.append(settings.modules_path)
+	sys.path.append(settings.workflows_path)
 
-	persistent_state = shelve.open(persistent_state_path, writeback=True)
+	persistent_state = shelve.open(settings.persistent_state_path, writeback=True)
 
 	agent = Agent(persistent_state)
 	try:
