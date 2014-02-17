@@ -17,7 +17,7 @@ class Agent(object):
 	
 	"""Implements job monitoring"""
 	def __init__(self, persistent_state):
-		sys.path = [sys.path, modules_path]
+		sys.path = [sys.path, settings.modules_path]
 		self.state = persistent_state
 		self.init_persistent_state()
 
