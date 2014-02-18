@@ -35,7 +35,7 @@ class Bridge:
 	def modules(self):
 		self.ssh.sendline(agent+"-m")
 		self.ssh.prompt()
-		files = self.ssh.before.split()[3:] #first 3 splits are python aget.py -m
+		files = self.ssh.before.split()[3:] #first 3 splits are python agent.py -m
 		return files
 
 	def workflows(self):
@@ -48,7 +48,7 @@ class Bridge:
 		self.ssh.sendline(agent+"-s "+workflow_name)
 		self.ssh.prompt()
 		try:
-			int(self.ssh.before) #may throw, by design
+			return int(self.ssh.before.split()[4]) #may throw, by design we expect [agent -s name ID]
 		except Exception as e:
 			logging.error("scheduling workflow: "+workflow_name)
 			logging.exception(e)

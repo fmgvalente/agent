@@ -37,12 +37,16 @@ class Workflow:
 		return "workflow "+self.name+" id:"+str(self.id)+" running? "+str(self.is_running)
 
 	def launch(self):
+		if(self.is_running):
+			raise Exception("Workflow "+self.name+" is already running! Its id is:{}".format(self.id))
+
 		#initialize running directory
 		self.initialize_directory_structure()
 		
-		#raise Exception("launch not implemented yet")	
-
 		#get ready to fire actors
+		modules_ready_to_fire = self.flow.
+
+
 		#dispatch them
 
 
@@ -59,7 +63,8 @@ class Workflow:
 		os.makedirs(settings.execution_path+"/task_{}".format(self.id), exist_ok=True)
 		os.makedirs(settings.execution_path+"/task_{}/running".format(self.id), exist_ok=True)
 		os.makedirs(settings.execution_path+"/task_{}/pending".format(self.id), exist_ok=True)
-		#for each task create a directory in the pending list111
+		#for each task create a directory in the pending list
+		
 
 
 
