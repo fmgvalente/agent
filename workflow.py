@@ -19,6 +19,7 @@ class Workflow:
 
 		#load module
 		try:
+			print(sys.path)
 			self.flow = __import__(self.name)
 		except Exception as e:
 			print("failure importing module {}".format(self.name))
