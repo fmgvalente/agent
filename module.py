@@ -8,10 +8,9 @@ class Module:
 		self.links = []
 		try:
 			self.mod = __import__(self.module_name)
-		except:
+		except Exception as e:
 			print("failure importing module {}".format(self.module_name))
-		
-		print("succesfully loaded {}, containing: {}".format(self.module_name, dir(self.mod)))
+			print(e)
 
 
 	def run(self, output_dir_path):
