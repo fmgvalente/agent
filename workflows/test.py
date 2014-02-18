@@ -6,6 +6,7 @@ a = Module("feature_extraction")
 b = Module("void")
 c = Module("void")
 d = Module("text_printer")
+e = Module("void")
 
 init >> a
 init >> b
