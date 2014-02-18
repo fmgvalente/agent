@@ -5,7 +5,8 @@ class Module:
 
 	def __init__(self, module_name):
 		self.module_name = module_name
-		self.links = []
+		self.output_modules = []
+		self.input_modules = []
 
 		try:
 			self.mod = __import__(self.module_name)
@@ -20,12 +21,12 @@ class Module:
 		os.makedirs(self.output_dir_path, exist_ok=True)
 		self.mod.launch(self.output_dir_path)
 
-
 	def collect(self):
 		pass
 
 	def __rshift__(self, other):
-		other.links.append(self)
+		other.input_modules.append(self)
+		self.output_modules.append(other)
 
 
 if __name__ == "__main__":

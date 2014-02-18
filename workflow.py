@@ -16,6 +16,7 @@ class Workflow:
 		self.id = job_id
 		self.name = workflow_name
 		self.is_running = running
+		self.base_path = settings.execution_path+"/task_{}".format(self.id)
 
 		#load module
 		try:
@@ -42,9 +43,10 @@ class Workflow:
 
 		#initialize running directory
 		self.initialize_directory_structure()
+		self.prepare_modules()
 		
 		#get ready to fire actors
-		modules_ready_to_fire = self.flow.
+		modules_ready_to_fire = self.get_ready_to_fire()
 
 
 		#dispatch them
@@ -60,13 +62,17 @@ class Workflow:
 	def initialize_directory_structure(self):
 		if(self.is_running):
 			return;
-		os.makedirs(settings.execution_path+"/task_{}".format(self.id), exist_ok=True)
-		os.makedirs(settings.execution_path+"/task_{}/running".format(self.id), exist_ok=True)
-		os.makedirs(settings.execution_path+"/task_{}/pending".format(self.id), exist_ok=True)
+		os.makedirs(self.base_path, exist_ok=True)
+		os.makedirs(self.base_path+ "running", exist_ok=True)
+		os.makedirs(self.base_path+"/pending", exist_ok=True)
+		os.makedirs(self.base_path+"/finished", exist_ok=True)
 		#for each task create a directory in the pending list
-		
 
+	def get_ready_to_fire(self):
+		pass
 
+	def prepare_modules(self):
+		pass
 
 
 
