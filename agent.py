@@ -44,8 +44,10 @@ class Agent(object):
 	def progress(self, job_id):
 		return 0.42
 
-	def scheduleWorkflow(self):
-		return 42
+	def scheduleWorkflow(self, workflowName):
+		flow = Workflow(agent.id_increment_and_get(), workflowName)
+		flow.launch()
+		print(flow.id)
 
 	def cancelWorkflow():
 		pass
@@ -89,11 +91,7 @@ if __name__ == "__main__":
 
 			if(sys.argv[i] == "-s" and i+1 < len(sys.argv)):
 				logging.info("called agent with -s (schedule workflow):"+sys.argv[i+1])
-				
-				#creates workflow
-				flow = Workflow(agent.id_increment_and_get(), sys.argv[i+1])
-				flow.launch()
-				print(flow.id)
+				agent.scheduleWorkflow(sys.argv[i+1])
 				i+=2
 				continue
 
