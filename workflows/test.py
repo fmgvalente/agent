@@ -1,4 +1,4 @@
-import module
+from module import Module
 
 init = Module("init")
 final = Module("final")
