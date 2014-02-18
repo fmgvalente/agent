@@ -18,6 +18,9 @@ class Agent(object):
 	"""Implements job monitoring"""
 	def __init__(self, persistent_state):
 		sys.path = [sys.path, settings.modules_path]
+		sys.path = [settings.agent_path, sys.path]
+		sys.path = [settings.workflows_path, sys.path]
+
 		self.state = persistent_state
 		self.init_persistent_state()
 
@@ -64,9 +67,6 @@ if __name__ == "__main__":
 	logging.info("called agent with: "+repr(sys.argv))
 
 	#adds module and workflow directories to python's search path
-	sys.path = [settings.agent_path, sys.path]
-	sys.path = [settings.modules_path, sys.path]
-	sys.path = [settings.workflows_path, sys.path]
 
 	persistent_state = shelve.open(settings.persistent_state_path, writeback=True)
 
