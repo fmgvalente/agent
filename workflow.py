@@ -12,19 +12,19 @@ def running_workflow_from_id(id):
 class Workflow:
 
 	def __init__(self, job_id, workflow_name, running=False):
-		logging.info("init workflow:"+workflow_name)
+		logging.info("init workflow:"+workflow_name+"running={} and id:{}".format(running,job_id))
 		self.id = job_id
 		self.name = workflow_name
 		self.is_running = running
 
 		#load module
 		try:
-			print(sys.path)
-			print(self.name)
+			logging.info("loading module:" + self.name)
 			self.flow = __import__(self.name)
 		except Exception as e:
-			print("failure importing module {}".format(self.name))
-			print(e)
+			logging.error("failure importing module {}".format(self.name))
+			logging.error(e)
+			raise
 
 
 	def progress(self):
@@ -39,8 +39,9 @@ class Workflow:
 	def launch(self):
 		#initialize running directory
 		self.initialize_directory_structure()
-		print("I wish I could launch...")
-		print("said task:{} named:{} with state:{}".format(self.id,self.name, self.is_running))
+		
+		raise Exception("launch not implemented yet")	
+
 		#get ready to fire actors
 		#dispatch them
 

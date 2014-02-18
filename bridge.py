@@ -47,8 +47,12 @@ class Bridge:
 	def scheduleWorkflow(self, workflow_name):
 		self.ssh.sendline(agent+"-s "+workflow_name)
 		self.ssh.prompt()
-		print (self.ssh.before)
-		return self.ssh.before
+		try:
+			int(self.ssh.before) #may throw, by design
+		except Exception as e:
+			logging.error("scheduling workflow: "+workflow_name)
+			logging.exception(e)
+			raise Exception("grid has not returned a valid task id")
 
 
 if __name__ == "__main__":

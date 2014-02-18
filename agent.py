@@ -102,8 +102,10 @@ if __name__ == "__main__":
 
 	except Exception as e:
 		logging.exception(e)
-		print("A nasty exception was caught. Check the log for more details...")
+		print("A nasty error occurred. Check the log for more details...")
+		print("...for your conveniency:")
 		print(e)
+		print("--------")
 
 	persistent_state.close()
 

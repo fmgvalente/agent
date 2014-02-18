@@ -22,10 +22,10 @@ c 		>> 		e
 
 #	workflow:
 #
-# init -----a	 d
-#      \     \  /
-#   	\	  c 
-#	     \   /  \
+# init -----a	 d----final
+#      \     \  /    /
+#   	\	  c     /
+#	     \   /  \  /
 #          b     e
 #
 #
