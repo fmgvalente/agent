@@ -40,7 +40,7 @@ class Workflow:
 		#initialize running directory
 		self.initialize_directory_structure()
 		
-		raise Exception("launch not implemented yet")	
+		#raise Exception("launch not implemented yet")	
 
 		#get ready to fire actors
 		#dispatch them
