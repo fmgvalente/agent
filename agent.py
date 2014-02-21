@@ -66,13 +66,6 @@ class Agent(object):
 if __name__ == "__main__":
     logging.info("called agent with: "+repr(sys.argv))
 
-    
-    import socket
-    print(socket.gethostname())
-    file1 = open(socket.gethostname(),'w')
-    file1.close()
-
-
     persistent_state = shelve.open(settings.persistent_state_path, writeback=True)
 
     agent = Agent(persistent_state)
