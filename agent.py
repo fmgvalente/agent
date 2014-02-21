@@ -66,7 +66,11 @@ class Agent(object):
 if __name__ == "__main__":
     logging.info("called agent with: "+repr(sys.argv))
 
-    #adds module and workflow directories to python's search path
+    if (len(sys.argv)==0):
+        import socket
+        print(socket.gethostname())
+        
+
 
     persistent_state = shelve.open(settings.persistent_state_path, writeback=True)
 
