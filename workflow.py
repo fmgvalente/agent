@@ -6,12 +6,11 @@ import glob
 
 
 def from_id(id):
-    flow_name = glob.glob(settings.execution_path+'/*_'+str(id))
+    flow_name = os.path.basename(os.path.normpath(glob.glob( settings.execution_path+'/*_'+str(id) )[0] ))
     print("running workflows {}", flow_name)
-    
-
-
-    pass
+    name = flow_name.split('_')[0]
+    flow_id = flow_name.split('_')[1]
+    return Workflow(flow_id, name)
 
 
 class Workflow:
@@ -51,10 +50,9 @@ class Workflow:
             raise Exception("Workflow "+self.name+" is already running! Its id is:{}".format(self.id))
 
         self.prepare_modules()
-        
+
         #get ready to fire actors
         modules_ready_to_fire = self.get_ready_to_fire()
-
 
         #dispatch them
         print("ready_to_fire:")
@@ -70,19 +68,16 @@ class Workflow:
         #get ready to fire actors
         modules_ready_to_fire = self.get_ready_to_fire()
 
-
         #dispatch them
         print("ready_to_fire:")
         for mod in modules_ready_to_fire:
-            print(repr(mod))
+            print(mod.name)
             mod.launch(self.base_path+mod.name)
         print("ended ready_to_fire:")
 
     def initialize_persistent_data(self):
-        if(self.is_running):
-            return
         os.makedirs(self.base_path, exist_ok=True)
-        
+
         #for each task create a directory in the pending list
         print("building directories")
         for mod in self.all_modules():
@@ -91,20 +86,26 @@ class Workflow:
 
 
     def get_ready_to_fire(self):
-        #get init
-        if(self.is_running is False):
-            return [self.flow.init]
+        open_list = [self.flow.init]
+        return_list = []
 
-        check_list = [self.flow.init]
-        get_ready_to_fire_nodes = []
+        mods = self.all_modules()
+        ready_to_fire_nodes = []
 
-        for mod in check_list:
-            if(mod.has_finished):
-                check_list += mod.output_modules
-                print(check_list)
+        for mod in mods:
+            if(mod.has_finished or mod.is_running):
+                continue
 
-        return []
+            inputs = mod.input_modules
+            ready = True
+            for input in inputs:
+                if(not input.has_finished):
+                    ready = False
+            
+            if(ready):
+                ready_to_fire_nodes.append(mod)
 
+        return ready_to_fire_nodes
 
     def prepare_modules(self):
         print(repr(self.flow))
@@ -114,12 +115,12 @@ class Workflow:
         mod_list = []
         open_list = [self.flow.init]
 
-
         while open_list:
             for m in open_list[:]:
-                if m in mod_list is False:
+                if m not in mod_list:
+                    print(m.name)
                     mod_list.append(m)
-                open_list + m.output_modules
+                open_list = open_list + m.output_modules
                 open_list.remove(m)
 
         return mod_list
