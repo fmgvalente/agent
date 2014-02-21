@@ -69,7 +69,8 @@ if __name__ == "__main__":
     
     import socket
     print(socket.gethostname())
-        
+    file1 = open(socket.gethostname(),'w')
+    file1.close()
 
 
     persistent_state = shelve.open(settings.persistent_state_path, writeback=True)
