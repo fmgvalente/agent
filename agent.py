@@ -66,9 +66,9 @@ class Agent(object):
 if __name__ == "__main__":
     logging.info("called agent with: "+repr(sys.argv))
 
-    if (len(sys.argv)==0):
-        import socket
-        print(socket.gethostname())
+    
+    import socket
+    print(socket.gethostname())
         
 
 
