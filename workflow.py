@@ -7,7 +7,7 @@ import glob
 
 def from_id(id):
     flow_name = os.path.basename(os.path.normpath(glob.glob( settings.execution_path+'/*_'+str(id) )[0] ))
-    print("running workflows {}", flow_name)
+    logging.info("running workflow {}".format(flow_name))
     name = flow_name.split('_')[0]
     flow_id = flow_name.split('_')[1]
     return Workflow(flow_id, name)
@@ -58,21 +58,31 @@ class Workflow:
         print("ready_to_fire:")
         for mod in modules_ready_to_fire:
             print(repr(mod))
-            mod.launch(self.base_path+mod.name)
+            mod.launch(self.base_path+mod.module_name+"_"+str(mod.id))
+
         print("ended ready_to_fire:")
 
         self.is_running = True
         return self.id
 
+    def updateModules(self):
+        for mod in self.all_modules():
+            mod.updateState(self.base_path+mod.module_name+"_"+str(mod.id))
+
+
+
+
     def updateState(self):
+        self.updateModules()
+
         #get ready to fire actors
         modules_ready_to_fire = self.get_ready_to_fire()
 
         #dispatch them
         print("ready_to_fire:")
         for mod in modules_ready_to_fire:
-            print(mod.name)
-            mod.launch(self.base_path+mod.name)
+            print(mod.module_name)
+            mod.launch(self.base_path+mod.module_name+"_"+str(mod.id))
         print("ended ready_to_fire:")
 
     def initialize_persistent_data(self):
@@ -82,13 +92,10 @@ class Workflow:
         print("building directories")
         for mod in self.all_modules():
             print(mod)
-
+            os.makedirs(self.base_path+mod.module_name + "_" + str(mod.id), exist_ok=True)
 
 
     def get_ready_to_fire(self):
-        open_list = [self.flow.init]
-        return_list = []
-
         mods = self.all_modules()
         ready_to_fire_nodes = []
 
@@ -101,7 +108,7 @@ class Workflow:
             for input in inputs:
                 if(not input.has_finished):
                     ready = False
-            
+
             if(ready):
                 ready_to_fire_nodes.append(mod)
 
@@ -118,7 +125,7 @@ class Workflow:
         while open_list:
             for m in open_list[:]:
                 if m not in mod_list:
-                    print(m.name)
+                    print(m.module_name)
                     mod_list.append(m)
                 open_list = open_list + m.output_modules
                 open_list.remove(m)

@@ -4,6 +4,8 @@ import subprocess
 def launch(output_dir):
     
     print("launching init to:"+output_dir)
+    print("changing state")
+
     print("creating script file:{}".format(output_dir+"/launch.sh"))
 
     file = open(output_dir+"/launch.sh",'w')
@@ -11,15 +13,14 @@ def launch(output_dir):
     script = "#!/bin/sh\n"
     script += "#SBATCH --nodes=2\n"
     script += "#SBATCH --partition=gpu.test\n"
-    script += "srun ./mpisend\n"
-    script += "exit 0\n"
+    #script += "srun ./mpisend\n"
+    script += "touch {}\n".format(output_dir+"/_state_finished")
 
     file.write(script)
     file.close()
 
     print("launching script file")
-    subprocess.call(["sbatch",output_dir+"/launch.sh"])
-
+    subprocess.call(["sh", output_dir+"/launch.sh"])
 
     print("end of task")
 

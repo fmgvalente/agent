@@ -1,22 +1,20 @@
 import sys
 import os
 import logging
-
-#   Modules, when running, will be stored on disk as name_id
-#
-#
-
+import glob
 
 class Module:
 
-    def __init__(self, module_name, workflow_module_unique_name):
+    def __init__(self, module_name, id):
         self.module_name = module_name
-        self.name = workflow_module_unique_name
+        self.id = id
         self.output_modules = []
         self.input_modules = []
         self.is_running = False
         self.has_finished = False
 
+        #assumes directory exists
+    def launch(self, output_dir):
         try:
             self.mod = __import__(self.module_name, globals(), locals())
         except Exception as e:
@@ -24,10 +22,7 @@ class Module:
             logging.exception(e)
             raise Exception("failure importing module {}, check log".format(self.module_name))
 
-    def launch(self, output_dir_path):
-        self.output_dir_path = output_dir_path
-        os.makedirs(self.output_dir_path, exist_ok=True)
-        self.mod.launch(self.output_dir_path)
+        self.mod.launch(output_dir)
         self.is_running = True
 
     def collect(self):
@@ -36,6 +31,11 @@ class Module:
     def __rshift__(self, other):
         other.input_modules.append(self)
         self.output_modules.append(other)
+
+    def updateState(self,output_dir):
+        if(glob.glob(output_dir+'/_state_finished')):
+            self.is_running = False
+            self.has_finished = True
 
 
 if __name__ == "__main__":
