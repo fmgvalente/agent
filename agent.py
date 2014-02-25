@@ -1,9 +1,9 @@
 
+import os
 import sys
 import subprocess
 import glob
 import logging
-import shelve
 import workflow
 import settings
 
@@ -14,17 +14,10 @@ logging.basicConfig(filename='agent.log', level=logging.DEBUG, format='%(asctime
 class Agent(object):
 
     """Implements job monitoring"""
-    def __init__(self, persistent_state):
+    def __init__(self):
         sys.path = [settings.modules_path] + sys.path
         sys.path = [settings.agent_path] + sys.path
         sys.path = [settings.workflows_path] + sys.path
-
-        self.state = persistent_state
-        self.init_persistent_state()
-
-    def init_persistent_state(self):
-        if(not 'id_counter' in self.state):
-            self.state['id_counter'] = 0
 
     def modules(self):
         modules = glob.glob(settings.modules_path+'/*.py')
@@ -52,23 +45,28 @@ class Agent(object):
         flow = workflow.from_id(job_id)
         flow.updateState()
 
-    def cancelWorkflow():
-        pass
-
-    def signal_state_change():
-        pass
-
     def id_increment_and_get(self):
-        self.state['id_counter'] += 1
-        return self.state['id_counter']
+        state_file = None
+        if (not os.path.exists(settings.persistent_state_path)):
+            state_file = open(settings.persistent_state_path,'w')
+            state_file.write(str(0))
+            state_file.close()
+            return 0
+        else:
+            state_file = open(settings.persistent_state_path,'r')
+            id = int(state_file.read()) + 1
+            state_file.close()
+            state_file = open(settings.persistent_state_path,'w')
+            state_file.write(str(id))
+            return id
+
+    
 
 
 if __name__ == "__main__":
     logging.info("called agent with: "+repr(sys.argv))
 
-    persistent_state = shelve.open(settings.persistent_state_path, writeback=True)
-
-    agent = Agent(persistent_state)
+    agent = Agent()
     try:
 
         i = 1
@@ -99,6 +97,33 @@ if __name__ == "__main__":
                 i += 2
                 continue
 
+            if(sys.argv[i] == "-ud" and i+1 < len(sys.argv)):
+                logging.info("called agent with -u (update state with directory):"+sys.argv[i+1])
+                #extract workflow id from directory
+                id = 0
+                path_list = sys.argv[i+1].split(os.sep)
+                path_component = ""
+
+                for part in path_list[::-1]:
+                    id = id + 1
+                    if(not part):
+                        id = id -1
+                        continue
+                    if(id==2):
+                        path_component = part
+
+                print(path_component)
+                id = int(path_component.split('_')[1])
+                agent.updateState(id)
+                i += 2
+                continue
+
+            if(sys.argv[i] == "-h"):  #show help
+                i += 1
+
+            if(sys.argv[i] == "-a"):  #archive, cleans var, etc...
+                i += 1
+
             logging.info("wrong parameters?")
             logging.info(sys.argv[i])
             break
@@ -109,5 +134,3 @@ if __name__ == "__main__":
         print("...for your conveniency:")
         print(e)
         print("--------")
-
-    persistent_state.close()

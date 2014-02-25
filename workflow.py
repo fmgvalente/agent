@@ -15,13 +15,13 @@ def from_id(id):
 
 class Workflow:
 
-    def __init__(self, job_id, workflow_name, running=False):
-        logging.info("init workflow: {} running={} and id:{}".format(workflow_name, running, job_id))
+    def __init__(self, job_id, workflow_name):
         self.id = job_id
         self.name = workflow_name
-        self.is_running = running
         self.base_path = settings.execution_path+"/{}_{}/".format(self.name, self.id)
-
+        self.has_finished = os.path.exists(self.base_path+"/_state_finished")
+        logging.info("init workflow: {} finished={} and id:{}".format(workflow_name, self.has_finished, job_id))
+        
         #load module
         try:
             logging.info("loading workflow:" + self.name)
@@ -39,15 +39,16 @@ class Workflow:
         return 0.0
 
     def __repr__(self):
-        return "workflow "+self.name+" id:"+str(self.id)+" running? "+str(self.is_running)
+        return "workflow "+self.name+" id:"+str(self.id)+" finished? "+str(self.has_finished)
 
     def __str__(self):
-        return "workflow "+self.name+" id:"+str(self.id)+" running? "+str(self.is_running)
+        return "workflow "+self.name+" id:"+str(self.id)+" finished? "+str(self.has_finished)
 
     def launch(self):
         logging.info("launching:" + str(self))
-        if(self.is_running):
-            raise Exception("Workflow "+self.name+" is already running! Its id is:{}".format(self.id))
+        if(self.has_finished):
+            logging.error("call launch on a workflow already running: {}".format(self))
+            raise Exception("Workflow "+self.name+" has already completed! Its id is:{}".format(self.id))
 
         self.prepare_modules()
 
@@ -55,14 +56,10 @@ class Workflow:
         modules_ready_to_fire = self.get_ready_to_fire()
 
         #dispatch them
-        print("ready_to_fire:")
         for mod in modules_ready_to_fire:
-            print(repr(mod))
+            logging.info("ready to fire and firing: {}".format(repr(mod)))
             mod.launch(self.base_path+mod.module_name+"_"+str(mod.id))
 
-        print("ended ready_to_fire:")
-
-        self.is_running = True
         return self.id
 
     def updateModules(self):
@@ -79,33 +76,31 @@ class Workflow:
     def updateState(self):
         self.updateModules()
 
+        if(self.has_finished):
+            logging.info("updating workflow {} but it has already finished...".format(self))
+            return
 
         #checks if all jobs have been finished!
         if self.all_modules_finished():
             self.has_finished = True
-            file self.base_path
-
-
+            logging.info("workflow {} completed".format(self))
+            file = open(self.base_path+"/_state_finished",'w')
+            return
 
         #get ready to fire actors
         modules_ready_to_fire = self.get_ready_to_fire()
 
         #dispatch them
-        print("ready_to_fire:")
         for mod in modules_ready_to_fire:
-            print(mod.module_name)
+            logging.info("ready to fire and firing: {}".format(repr(mod)))
             mod.launch(self.base_path+mod.module_name+"_"+str(mod.id))
-        print("ended ready_to_fire:")
 
     def initialize_persistent_data(self):
         os.makedirs(self.base_path, exist_ok=True)
 
         #for each task create a directory in the pending list
-        print("building directories")
         for mod in self.all_modules():
-            print(mod)
             os.makedirs(self.base_path+mod.module_name + "_" + str(mod.id), exist_ok=True)
-
 
     def get_ready_to_fire(self):
         mods = self.all_modules()
@@ -127,8 +122,8 @@ class Workflow:
         return ready_to_fire_nodes
 
     def prepare_modules(self):
-        print(repr(self.flow))
-        print(dir(self.flow))
+        logging.info(repr(self.flow))
+        logging.info(dir(self.flow))
 
     def all_modules(self):
         mod_list = []

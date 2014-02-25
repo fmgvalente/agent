@@ -14,7 +14,9 @@ def launch(output_dir):
     script += "#SBATCH --nodes=2\n"
     script += "#SBATCH --partition=gpu.test\n"
     #script += "srun ./mpisend\n"
+    script += "sleep 10\n"
     script += "touch {}\n".format(output_dir+"/_state_finished")
+    script += "python ~/dev/agent/agent.py -ud {}".format(output_dir)
 
     file.write(script)
     file.close()

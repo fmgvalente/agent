@@ -38,6 +38,13 @@ class Module:
             self.has_finished = True
 
 
+    def __repr__(self):
+        return self.module_name+" "+str(self.id)
+
+    def __str__(self):
+        return self.module_name+" "+str(self.id)
+
+
 if __name__ == "__main__":
     sys.path.append("modules")
     print("testing module loading")
