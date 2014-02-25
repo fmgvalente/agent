@@ -69,11 +69,23 @@ class Workflow:
         for mod in self.all_modules():
             mod.updateState(self.base_path+mod.module_name+"_"+str(mod.id))
 
-
+    def all_modules_finished(self):
+        for mod in self.all_modules():
+            if(not mod.has_finished):
+                return False
+        return True
 
 
     def updateState(self):
         self.updateModules()
+
+
+        #checks if all jobs have been finished!
+        if self.all_modules_finished():
+            self.has_finished = True
+            file self.base_path
+
+
 
         #get ready to fire actors
         modules_ready_to_fire = self.get_ready_to_fire()
@@ -125,7 +137,7 @@ class Workflow:
         while open_list:
             for m in open_list[:]:
                 if m not in mod_list:
-                    print(m.module_name)
+                    #print(m.module_name)
                     mod_list.append(m)
                 open_list = open_list + m.output_modules
                 open_list.remove(m)
