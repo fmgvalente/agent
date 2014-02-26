@@ -6,6 +6,7 @@ import glob
 import logging
 import workflow
 import settings
+import time
 
 
 logging.basicConfig(filename='agent.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -38,10 +39,10 @@ class Agent(object):
     def scheduleWorkflow(self, workflowName):
         flow = workflow.Workflow(agent.id_increment_and_get(), workflowName)
         flow.launch()
-        print(flow.id)
+        return flow.id
 
     def updateState(self, job_id):
-        print("updating state")
+        logging.info("updating state of workflow:{}".format(job_id))
         flow = workflow.from_id(job_id)
         flow.updateState()
 
@@ -65,6 +66,22 @@ class Agent(object):
 
 if __name__ == "__main__":
     logging.info("called agent with: "+repr(sys.argv))
+
+    #wait on file lock
+    #this sucks, I know it, you know it, lets just ignore it, hopefully it will go away eventually
+    #the lock is needed because we want to run just a single instance of agent at a time, as it mutates state.
+    #however, we do not want the process to simply exit if another process has called agent because
+    #we have some tasks issue an update order on completion which we don't want to lose
+    #(it would not be a fatal error if we lose the update, but it sucks nonetheless, as we must now wait for the watchdog)
+    #lock is removed in the finally clause
+    while(True):
+        if os.path.exists(settings.global_filelock_path):
+            print("lock exists. is another instance running? waiting a bit...") #remove print after test
+            time.sleep(1)
+        else:
+            lock = open(settings.global_filelock_path, "w")
+            lock.close()
+            break
 
     agent = Agent()
     try:
@@ -93,12 +110,13 @@ if __name__ == "__main__":
 
             if(sys.argv[i] == "-u" and i+1 < len(sys.argv)):
                 logging.info("called agent with -u (update state):"+sys.argv[i+1])
-                agent.updateState(int(sys.argv[i+1]))
+                task_id = agent.updateState(int(sys.argv[i+1]))
+                print(id)
                 i += 2
                 continue
 
             if(sys.argv[i] == "-ud" and i+1 < len(sys.argv)):
-                logging.info("called agent with -u (update state with directory):"+sys.argv[i+1])
+                logging.info("called agent with -ud (update state with directory):"+sys.argv[i+1])
                 #extract workflow id from directory
                 id = 0
                 path_list = sys.argv[i+1].split(os.sep)
@@ -107,12 +125,11 @@ if __name__ == "__main__":
                 for part in path_list[::-1]:
                     id = id + 1
                     if(not part):
-                        id = id -1
+                        id = id - 1
                         continue
-                    if(id==2):
+                    if(id == 2):
                         path_component = part
 
-                print(path_component)
                 id = int(path_component.split('_')[1])
                 agent.updateState(id)
                 i += 2
@@ -131,6 +148,10 @@ if __name__ == "__main__":
     except Exception as e:
         logging.exception(e)
         print("A nasty error occurred. Check the log for more details...")
-        print("...for your conveniency:")
+        print("for your conveniency...:")
         print(e)
         print("--------")
+
+    finally:
+        if os.path.exists(settings.global_filelock_path):
+            os.remove(settings.global_filelock_path)

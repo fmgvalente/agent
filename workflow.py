@@ -24,7 +24,6 @@ class Workflow:
         
         #load module
         try:
-            logging.info("loading workflow:" + self.name)
             self.flow = __import__(self.name, globals(), locals())
 
             #initialize running directory
@@ -66,7 +65,7 @@ class Workflow:
         for mod in self.all_modules():
             mod.updateState(self.base_path+mod.module_name+"_"+str(mod.id))
 
-    def all_modules_finished(self):
+    def are_all_modules_finished(self):
         for mod in self.all_modules():
             if(not mod.has_finished):
                 return False
@@ -74,17 +73,19 @@ class Workflow:
 
 
     def updateState(self):
-        self.updateModules()
 
         if(self.has_finished):
             logging.info("updating workflow {} but it has already finished...".format(self))
             return
 
+        self.updateModules()
+
         #checks if all jobs have been finished!
-        if self.all_modules_finished():
+        if self.are_all_modules_finished():
             self.has_finished = True
             logging.info("workflow {} completed".format(self))
             file = open(self.base_path+"/_state_finished",'w')
+            file.close()
             return
 
         #get ready to fire actors
@@ -116,9 +117,11 @@ class Workflow:
                 if(not input.has_finished):
                     ready = False
 
-            if(ready):
+            if(ready and (mod not in ready_to_fire_nodes)):
                 ready_to_fire_nodes.append(mod)
 
+        print(ready_to_fire_nodes)
+        print("---------------")
         return ready_to_fire_nodes
 
     def prepare_modules(self):

@@ -4,10 +4,6 @@ import subprocess
 def launch(output_dir):
     
     print("launching void to:"+output_dir)
-    print("changing state")
-
-    print("creating script file:{}".format(output_dir+"/launch.sh"))
-
     file = open(output_dir+"/launch.sh",'w')
 
     script = "#!/bin/sh\n"
@@ -21,10 +17,8 @@ def launch(output_dir):
     file.write(script)
     file.close()
 
-    print("launching script file")
-    subprocess.call(["sh", output_dir+"/launch.sh"])
-
-    print("end of task")
+    subprocess.Popen(["sh", output_dir+"/launch.sh"])
+    print("task returning control in: {}".format(output_dir))
 
 
 
