@@ -118,26 +118,17 @@ if __name__ == "__main__":
             if(sys.argv[i] == "-ud" and i+1 < len(sys.argv)):
                 logging.info("called agent with -ud (update state with directory):"+sys.argv[i+1])
                 #extract workflow id from directory
-                id = 0
-                path_list = sys.argv[i+1].split(os.sep)
-                path_component = ""
-
-                for part in path_list[::-1]:    #get workflow id -> basepath/workflow_id/module_id/
-                    id = id + 1
-                    if(not part):
-                        id = id - 1
-                        continue
-                    if(id == 2):
-                        path_component = part
+                path = sys.argv[i+1].rstrip(os.sep)
+                path_component = path.split(os.sep)[-2]
 
                 id = int(path_component.split('_')[1])
-                logging.info("comp:{}".format(path_component))
                 agent.updateState(id)
                 i += 2
                 continue
 
             if(sys.argv[i] == "-h"):  #show help
                 i += 1
+                print("eventually, there will be some modicum of help in here...")
 
             if(sys.argv[i] == "-a"):  #archive, cleans var, etc...
                 i += 1
