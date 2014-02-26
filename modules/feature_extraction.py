@@ -22,6 +22,8 @@ def launch(output_dir):
     file.close()
 
     subprocess.Popen(["sbatch", output_dir+"/launch.sh"])    
+    #needs to get task id and that info
+
 
 
 

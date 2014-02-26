@@ -1,10 +1,10 @@
 import subprocess
 import settings
-
+import logging
 
 def launch(output_dir):
     
-    print("launching text_printer to:"+output_dir)
+    logging.info("launching text_printer to:"+output_dir)
 
     file = open(output_dir+"/launch.sh",'w')
 

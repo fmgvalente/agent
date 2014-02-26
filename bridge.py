@@ -20,10 +20,11 @@ COMMAND_LINE = re.compile(r"fmvalente@login-hpc-01 .*\]\$")
 
 class Bridge:
 
-    def __init__(self):
+    def __init__(self, password):
         try:
+
             self.ssh = pxssh.pxssh()
-            self.ssh.login(remote_host, remote_login, "Xe3DE2D5")
+            self.ssh.login(remote_host, remote_login, password)
 
         except pxssh.ExceptionPxssh as e:
             print("ssh login failure.")
@@ -54,8 +55,8 @@ class Bridge:
 
 
 if __name__ == "__main__":
-
-    bridge = Bridge()
+    import sys
+    bridge = Bridge(sys.argv[1])
 
     print("listing modules:")
     print(bridge.modules())
