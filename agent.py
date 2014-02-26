@@ -119,10 +119,10 @@ if __name__ == "__main__":
                 logging.info("called agent with -ud (update state with directory):"+sys.argv[i+1])
                 #extract workflow id from directory
                 path = sys.argv[i+1].rstrip(os.sep)
-                print(path)
-                print(path.split(os.sep))
+                logging.info(path)
+                logging.info(path.split(os.sep))
                 path_component = path.split(os.sep)[-2]
-                print(path_component)
+                logging.info(path_component)
                 id = int(path_component.split('_')[1])
                 agent.updateState(id)
                 i += 2
