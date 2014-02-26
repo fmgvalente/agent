@@ -122,7 +122,7 @@ if __name__ == "__main__":
                 path_list = sys.argv[i+1].split(os.sep)
                 path_component = ""
 
-                for part in path_list[::-1]:
+                for part in path_list[::-1]:    #get workflow id -> basepath/workflow_id/module_id/
                     id = id + 1
                     if(not part):
                         id = id - 1
@@ -131,7 +131,7 @@ if __name__ == "__main__":
                         path_component = part
 
                 id = int(path_component.split('_')[1])
-                logging.info("id:{} comp:{}".format(id,path_component))
+                logging.info(comp:{}".format(path_component))
                 agent.updateState(id)
                 i += 2
                 continue
