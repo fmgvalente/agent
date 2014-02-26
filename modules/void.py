@@ -18,7 +18,6 @@ def launch(output_dir):
     file.close()
 
     subprocess.Popen(["sh", output_dir+"/launch.sh"])
-    print("task returning control in: {}".format(output_dir))
 
 
 

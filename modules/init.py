@@ -20,9 +20,6 @@ def launch(output_dir):
 
     subprocess.Popen(["sh", output_dir+"/launch.sh"])
 
-    print("task returning control in: {}".format(output_dir))
-
-
 
 def collect(output_dir):
     print ("collect init from:"+output_dir)

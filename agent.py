@@ -155,3 +155,4 @@ if __name__ == "__main__":
     finally:
         if os.path.exists(settings.global_filelock_path):
             os.remove(settings.global_filelock_path)
+        logging.info("finished agent run")

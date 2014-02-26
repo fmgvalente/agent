@@ -83,7 +83,7 @@ class Workflow:
         #checks if all jobs have been finished!
         if self.are_all_modules_finished():
             self.has_finished = True
-            logging.info("workflow {} completed".format(self))
+            logging.info("{} completed".format(self))
             file = open(self.base_path+"/_state_finished",'w')
             file.close()
             return

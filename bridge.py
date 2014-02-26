@@ -23,7 +23,7 @@ class Bridge:
     def __init__(self):
         try:
             self.ssh = pxssh.pxssh()
-            self.ssh.login(remote_host, remote_login)
+            self.ssh.login(remote_host, remote_login, "Xe3DE2D5")
 
         except pxssh.ExceptionPxssh as e:
             print("ssh login failure.")
@@ -63,6 +63,6 @@ if __name__ == "__main__":
     print("listing workflows:")
     print(bridge.workflows())
 
-    print("scheduling workflow: test")
-    id = bridge.scheduleWorkflow("test")
+    print("scheduling workflow: xpto")
+    id = bridge.scheduleWorkflow("xpto")
     print(id)
