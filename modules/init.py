@@ -18,7 +18,7 @@ def launch(output_dir):
     file.write(script)
     file.close()
 
-    #subprocess.Popen(["sbatch", output_dir+"/launch.sh"])
+    subprocess.Popen(["sbatch", output_dir+"/launch.sh"])
 
 
 def collect(output_dir):
