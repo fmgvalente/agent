@@ -120,8 +120,7 @@ class Workflow:
             if(ready and (mod not in ready_to_fire_nodes)):
                 ready_to_fire_nodes.append(mod)
 
-        print(ready_to_fire_nodes)
-        print("---------------")
+        logging.info(ready_to_fire_nodes)
         return ready_to_fire_nodes
 
     def prepare_modules(self):

@@ -1,10 +1,11 @@
-
 import subprocess
+import settings
+import logging
 
 
 def launch(output_dir):
     
-    print("launching feature_extraction to:"+output_dir)
+    logging.info("launching feature_extraction to:"+output_dir)
 
     file = open(output_dir+"/launch.sh",'w')
 
@@ -12,6 +13,7 @@ def launch(output_dir):
     script += "#SBATCH --nodes=2\n"
     script += "#SBATCH --partition=gpu.test\n"
     #script += "srun ./mpisend\n"
+    script += "srun hostname>{}/ff\n".format(output_dir)
     script += "touch {}\n".format(output_dir+"/_state_finished")
     script += "python ~/dev/agent/agent.py -ud {}".format(output_dir)
 
@@ -19,7 +21,7 @@ def launch(output_dir):
     file.write(script)
     file.close()
 
-    subprocess.Popen(["sh", output_dir+"/launch.sh"])    
+    subprocess.Popen(["sbatch", output_dir+"/launch.sh"])    
 
 
 
