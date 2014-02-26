@@ -9,7 +9,7 @@ def launch(output_dir):
     file = open(output_dir+"/launch.sh",'w')
 
     script = "#!/bin/sh\n"
-    script += "#SBATCH --nodes=2\n"
+    script += "#SBATCH --nodes=1\n"
     script += "#SBATCH --partition=gpu.test\n"
     script += "srun hostname>{}/ff\n".format(output_dir)
     script += "touch {}\n".format(output_dir+"/_state_finished")
@@ -18,7 +18,7 @@ def launch(output_dir):
     file.write(script)
     file.close()
 
-    subprocess.Popen(["sbatch", output_dir+"/launch.sh"])
+    #subprocess.Popen(["sbatch", output_dir+"/launch.sh"])
 
 
 def collect(output_dir):
