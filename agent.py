@@ -124,6 +124,7 @@ if __name__ == "__main__":
                 path_component = path.split(os.sep)[-2]
                 logging.info(path_component)
                 id = int(path_component.split('_')[1])
+                logging.info("calling updateState with workflow={}".format(id))
                 agent.updateState(id)
                 i += 2
                 continue
