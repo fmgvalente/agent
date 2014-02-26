@@ -131,7 +131,7 @@ if __name__ == "__main__":
                         path_component = part
 
                 id = int(path_component.split('_')[1])
-                logging.info(comp:{}".format(path_component))
+                logging.info("comp:{}".format(path_component))
                 agent.updateState(id)
                 i += 2
                 continue
