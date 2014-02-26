@@ -48,6 +48,8 @@ class Bridge:
         try:
             return int(self.ssh.before.split()[4])  #may throw, by design we expect [agent -s name ID]
         except Exception as e:
+            print(e)
+            print(self.ssh.before)
             logging.error("scheduling workflow: "+workflow_name)
             logging.exception(e)
             logging.error("instead of an ID we got the following: "+self.ssh.before)

@@ -68,12 +68,12 @@ if __name__ == "__main__":
     logging.info("called agent with: "+repr(sys.argv))
 
     #wait on file lock
-    #this sucks, I know it, you know it, lets just ignore it, hopefully it will go away eventually
+    #this sucks, I know it, you know it, lets just ignore it, hopefully it will go away eventually (it likely wont)
     #the lock is needed because we want to run just a single instance of agent at a time, as it mutates state.
     #however, we do not want the process to simply exit if another process has called agent because
     #we have some tasks issue an update order on completion which we don't want to lose
     #(it would not be a fatal error if we lose the update, but it sucks nonetheless, as we must now wait for the watchdog)
-    #lock is removed in the finally clause
+    #the lock is removed in the finally clause
     while(True):
         if os.path.exists(settings.global_filelock_path):
             print("lock exists. is another instance running? waiting a bit...") #remove print after test
@@ -131,6 +131,7 @@ if __name__ == "__main__":
                         path_component = part
 
                 id = int(path_component.split('_')[1])
+                logging.info("id:{} comp:{}".format(id,path_component))
                 agent.updateState(id)
                 i += 2
                 continue
