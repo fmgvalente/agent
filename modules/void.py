@@ -14,7 +14,7 @@ def launch(output_dir):
     script += "srun hostname>{}/ff\n".format(output_dir)
     script += "sleep 10\n"
     script += "touch {}\n".format(output_dir+"/_state_finished")
-    script += "python {} -ud {}".format(settings.agent_path+"/agent.py", output_dir)
+    script += "agent -ud {}".format(output_dir)
 
     file.write(script)
     file.close()
