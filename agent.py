@@ -66,7 +66,7 @@ class Agent(object):
 
 if __name__ == "__main__":
     logging.info("called agent with: "+repr(sys.argv))
-
+    print(sys.version)
     #wait on file lock
     #this sucks, I know it, you know it, lets just ignore it, hopefully it will go away eventually (it likely wont)
     #the lock is needed because we want to run just a single instance of agent at a time, as it mutates state.
