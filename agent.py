@@ -138,7 +138,7 @@ if __name__ == "__main__":
             if(sys.argv[i] == "-a"):  #archive, cleans var, etc...
                 i += 1
 
-            logging.info("wrong parameters?")
+            print("wrong parameters? try: agent -h")
             logging.info(sys.argv[i])
             break
 
