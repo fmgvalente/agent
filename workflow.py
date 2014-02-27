@@ -6,7 +6,7 @@ import glob
 
 
 def from_id(id):
-    flow_name = os.path.basename(os.path.normpath(glob.glob( settings.execution_path+'/*_'+str(id) )[0] ))
+    flow_name = os.path.basename(os.path.normpath(glob.glob(settings.execution_path+'/*_'+str(id))[0]))
     logging.info("running workflow {1}".format(flow_name))
     name = flow_name.split('_')[0]
     flow_id = flow_name.split('_')[1]
