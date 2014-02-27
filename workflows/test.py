@@ -2,32 +2,12 @@ from module import Module
 
 
 #node definition area
-init 	= Module("init")
-final 	= Module("final")
-a 		= Module("feature_extraction")
-b 		= Module("void")
-c 		= Module("void")
-d 		= Module("text_printer")
-e 		= Module("void")
+init 	= Module("init",0)
+final 	= Module("final",1)
+a 		= Module("plainzero",2)
 
 #edge definition area
 init 	>> 		a
-init 	>> 		b
-a 		>> 		c
-b 		>> 		c
-c 		>> 		d
-c 		>> 		e
-
-
-
-#	workflow:
-#
-# init -----a	 d----final
-#      \     \  /    /
-#   	\	  c     /
-#	     \   /  \  /
-#          b     e
-#
-#
+a 		>>		final
 
 

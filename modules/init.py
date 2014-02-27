@@ -11,14 +11,14 @@ def launch(output_dir):
     script = "#!/bin/sh\n"
     script += "#SBATCH --nodes=1\n"
     script += "#SBATCH --partition=gpu.test\n"
-    script += "srun hostname>{}/ff\n".format(output_dir)
+    script += "hostname>{}/ff\n".format(output_dir)
     script += "touch {}\n".format(output_dir+"/_state_finished")
     script += "python {} -ud {}".format(settings.agent_path+"/agent.py", output_dir)
 
     file.write(script)
     file.close()
 
-    subprocess.Popen(["sbatch", output_dir+"/launch.sh"])
+    subprocess.Popen(["sh", output_dir+"/launch.sh"])
 
 
 def collect(output_dir):

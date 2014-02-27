@@ -42,7 +42,7 @@ class Agent(object):
         return flow.id
 
     def updateState(self, job_id):
-        logging.info("updating state of workflow:{1}".format(job_id))
+        logging.info("updating state of workflow:{}".format(job_id))
         flow = workflow.from_id(job_id)
         flow.updateState()
 
@@ -66,7 +66,7 @@ class Agent(object):
 
 if __name__ == "__main__":
     logging.info("called agent with: "+repr(sys.argv))
-    print(sys.version)
+
     #wait on file lock
     #this sucks, I know it, you know it, lets just ignore it, hopefully it will go away eventually (it likely wont)
     #the lock is needed because we want to run just a single instance of agent at a time, as it mutates state.
@@ -126,7 +126,7 @@ if __name__ == "__main__":
                 logging.info(path_component.split('_')[1])
                 flowid = int(path_component.split('_')[1])
                 print(flowid)
-                logging.info("calling updateState with workflow={1}".format(flowid))
+                logging.info("calling updateState with workflow {} ".format(flowid))
                 agent.updateState(flowid)
                 i += 2
                 continue
