@@ -42,7 +42,7 @@ class Agent(object):
         return flow.id
 
     def updateState(self, job_id):
-        logging.info("updating state of workflow:{}".format(job_id))
+        #logging.info("updating state of workflow:{}".format(job_id))
         flow = workflow.from_id(job_id)
         flow.updateState()
 
