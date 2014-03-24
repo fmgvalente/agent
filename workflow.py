@@ -71,7 +71,6 @@ class Workflow:
                 return False
         return True
 
-
     def updateState(self):
 
         if(self.has_finished):
