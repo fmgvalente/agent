@@ -71,6 +71,10 @@ class Workflow:
                 return False
         return True
 
+
+#   updates the workflow state. if its already finished returns immediately
+#
+#
     def updateState(self):
 
         if(self.has_finished):

@@ -41,6 +41,14 @@ class Agent(object):
         flow.launch()
         return flow.id
 
+    def finishWorkflow(self, workflowDir):
+        return True
+
+    def report(self, jobId):
+        print("generating report...")
+        print("done")
+
+
     def updateState(self, job_id):
         logging.info("updating state of workflow:{}".format(job_id))
         flow = workflow.from_id(job_id)
@@ -49,20 +57,17 @@ class Agent(object):
     def id_increment_and_get(self):
         state_file = None
         if (not os.path.exists(settings.persistent_state_path)):
-            state_file = open(settings.persistent_state_path,'w')
+            state_file = open(settings.persistent_state_path,  'w')
             state_file.write(str(0))
             state_file.close()
             return 0
         else:
-            state_file = open(settings.persistent_state_path,'r')
+            state_file = open(settings.persistent_state_path, 'r')
             id = int(state_file.read()) + 1
             state_file.close()
-            state_file = open(settings.persistent_state_path,'w')
+            state_file = open(settings.persistent_state_path, 'w')
             state_file.write(str(id))
             return id
-
-    
-
 
 if __name__ == "__main__":
     logging.info("called agent with: "+repr(sys.argv))
@@ -76,7 +81,7 @@ if __name__ == "__main__":
     #the lock is removed in the finally clause
     while(True):
         if os.path.exists(settings.global_filelock_path):
-            print("lock exists. is another instance running? waiting a bit...") #remove print after test
+            print("lock exists. is another instance running? waiting a bit...")  #remove print after test
             time.sleep(1)
         else:
             lock = open(settings.global_filelock_path, "w")
@@ -131,12 +136,33 @@ if __name__ == "__main__":
                 i += 2
                 continue
 
+            if(sys.argv[i] == "-f" and i+1 < len(sys.argv)):
+                logging.info("called agent with -f (finish workflow):"+sys.argv[i+1])
+                task_id = agent.finishWorkflow(sys.argv[i+1])
+                print(id)
+                i += 2
+                continue
+
+            if(sys.argv[i] == "-r" and i+1 < len(sys.argv)):
+                logging.info("called agent with -r (get report):"+sys.argv[i+1])
+                task_id = agent.report(sys.argv[i+1])
+                i += 2
+                continue
+
             if(sys.argv[i] == "-h"):  #show help
                 i += 1
                 print("eventually, there will be some modicum of help in here...")
+                continue
+
+            if(sys.argv[i] == "-state"): #show state of tasks
+                i += 1
+                print("show state: running tasks, completed tasks, pending tasks")
+                continue
+
 
             if(sys.argv[i] == "-a"):  #archive, cleans var, etc...
                 i += 1
+                continue
 
             print("wrong parameters? try: agent -h")
             logging.info(sys.argv[i])

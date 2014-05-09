@@ -1,20 +1,25 @@
 import subprocess
 import settings
 import logging
+import os
+
 
 
 def launch(output_dir):
     
-    logging.info("launching final to:"+output_dir)
+    logging.info("launching final to:"+output_dir)    
+    workflow_dir = os.path.dirname(output_dir)
+    logging.info("flow finished: "+workflow_dir)
 
     file = open(output_dir+"/launch.sh",'w')
 
     script = "#!/bin/sh\n"
-    script += "#SBATCH --nodes=2\n"
+    script += "#SBATCH --nodes=1\n"
     script += "#SBATCH --partition=gpu.test\n"
-    script += "hostname>{}/ff\n".format(output_dir)
+    script += "hostname>{}/exec_node\n".format(output_dir)
     script += "touch {}\n".format(output_dir+"/_state_finished")
     script += "agent -ud {}".format(output_dir)
+    script += "agent -f {}".format(workflow_dir)
 
     file.write(script)
     file.close()
