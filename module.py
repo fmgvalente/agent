@@ -27,6 +27,10 @@ class Module:
 
         open(self.basepath+"/_state_running", "w")
         self.is_running = True
+        print(dir(self))
+        print(output_dir)
+        print(repr(self.mod))
+        print(dir(self.mod))
         self.mod.launch(self.basepath)
 
     def collect(self):

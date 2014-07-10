@@ -5,7 +5,7 @@ from module import Module
 init 	= Module("init",0)
 final 	= Module("final",1)
 a 		= Module("csv",2)
-b 		= Module("svm",3)
+b 		= Module("train_svm",3)
 c 		= Module("report",4)
 
 #edge definition area
