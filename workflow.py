@@ -4,7 +4,8 @@ import os
 import sys
 import glob
 
-
+#once persisted, a workflow has an id, that will correspond to a specific location on disk
+#given that id, this method loads the workflow object to memory
 def from_id(id):
     flow_name = os.path.basename(os.path.normpath(glob.glob(settings.execution_path+'/*_'+str(id))[0]))
     logging.info("running workflow {}".format(flow_name))
@@ -15,6 +16,7 @@ def from_id(id):
 
 class Workflow:
 
+    #creates a new workflow object. requires a unique id and the location of the workflow description file
     def __init__(self, job_id, workflow_name):
         self.id = job_id
         self.name = workflow_name
@@ -44,7 +46,7 @@ class Workflow:
         return "workflow "+self.name+" id:"+str(self.id)+" finished? "+str(self.has_finished)
 
     def launch(self):
-        logging.info("launching:" + str(self))
+        logging.info("launching workflow:" + str(self))
         if(self.has_finished):
             logging.error("call launch on a workflow already running: {}".format(self))
             raise Exception("Workflow "+self.name+" has already completed! Its id is:{}".format(self.id))
@@ -72,7 +74,7 @@ class Workflow:
         return True
 
 
-#   updates the workflow state. if its already finished returns immediately
+#   updates the workflow state. if it's already finished returns immediately
 #
 #
     def updateState(self):
@@ -81,6 +83,7 @@ class Workflow:
             logging.info("updating workflow {} but it has already finished...".format(self))
             return
 
+        #potentially changes state
         self.updateModules()
 
         #checks if all jobs have been finished!
@@ -106,6 +109,8 @@ class Workflow:
         for mod in self.all_modules():
             os.makedirs(self.base_path+mod.module_name + "_" + str(mod.id), exist_ok=True)
 
+    #returns a list of nodes in ready to fire state
+    #this means they have not yet been scheduled, but all their precedences have been fulfilled
     def get_ready_to_fire(self):
         mods = self.all_modules()
         ready_to_fire_nodes = []
@@ -126,10 +131,13 @@ class Workflow:
         logging.info(ready_to_fire_nodes)
         return ready_to_fire_nodes
 
+    #executes some init tasks if required
     def prepare_modules(self):
-        logging.info(repr(self.flow))
-        logging.info(dir(self.flow))
+        #logging.info(repr(self.flow))
+        #logging.info(dir(self.flow))
+        pass
 
+    #returns a list of all nodes in the 
     def all_modules(self):
         mod_list = []
         open_list = [self.flow.init]
@@ -144,7 +152,7 @@ class Workflow:
 
         return mod_list
 
-
+#not the main main, mainly for tests
 if __name__ == "__main__":
     sys.path.append(settings.workflows_path)
     sys.path.append(settings.modules_path)

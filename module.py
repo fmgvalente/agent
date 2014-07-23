@@ -5,7 +5,7 @@ import os
 
 class Module:
 
-    def __init__(self, module_name, id):
+    def __init__(self, module_name, id, *arguments, **keywords):
         self.module_name = module_name
         self.id = id
         self.output_modules = []
@@ -47,13 +47,15 @@ class Module:
         if(glob.glob(output_dir+'/_state_finished')):
             self.is_running = False
             self.has_finished = True
-        
 
     def __repr__(self):
         return self.module_name+" "+str(self.id)
 
     def __str__(self):
         return self.module_name+" "+str(self.id)
+
+    def __getitem__(self, index):
+        return index
 
 
 if __name__ == "__main__":

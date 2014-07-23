@@ -8,7 +8,16 @@ import workflow
 import settings
 import time
 
+#
+#   This class is the main entry point for the solution
+#   The Agent class implements the functionality
+#   check the main class for the command line arguments, or type agent -h
+#
 
+
+
+#sets up the debug level
+#TODO:this should be moved or read from a config file or entry parameter
 logging.basicConfig(filename='agent.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
@@ -70,7 +79,7 @@ class Agent(object):
             return id
 
 if __name__ == "__main__":
-    logging.info("called agent with: "+repr(sys.argv))
+    logging.info("NEW RUN: called agent with: "+repr(sys.argv))
 
     #wait on file lock
     #this sucks, I know it, you know it, lets just ignore it, hopefully it will go away eventually (it likely wont)
