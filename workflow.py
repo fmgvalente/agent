@@ -17,7 +17,7 @@ def from_id(id):
 class Workflow:
 
     #creates a new workflow object. requires a unique id and the location of the workflow description file
-    def __init__(self, job_id, workflow_name):
+    def __init__(self, job_id, workflow_name, *flags):
         self.id = job_id
         self.name = workflow_name
         self.base_path = settings.execution_path+"/{}_{}/".format(self.name, self.id)
@@ -28,8 +28,9 @@ class Workflow:
         try:
             self.flow = __import__(self.name, globals(), locals())
 
-            #initialize running directory
-            self.initialize_persistent_data()
+            #initialize running directory if not on test mode
+            if 'test' not in flags:
+                self.initialize_persistent_data()
 
         except Exception as e:
             logging.error("failure importing workflow {}".format(self.name))
@@ -40,10 +41,13 @@ class Workflow:
         return 0.0
 
     def __repr__(self):
-        return "workflow "+self.name+" id:"+str(self.id)+" finished? "+str(self.has_finished)
+        return "workflow "+self.name+" id:"+str(self.id)+" finished: "+str(self.has_finished)
 
     def __str__(self):
-        return "workflow "+self.name+" id:"+str(self.id)+" finished? "+str(self.has_finished)
+        retstr = repr(self)
+        for mod in self.all_modules():
+            retstr += "\n\t"+str(mod)
+        return retstr;
 
     def launch(self):
         logging.info("launching workflow:" + str(self))
@@ -137,7 +141,7 @@ class Workflow:
         #logging.info(dir(self.flow))
         pass
 
-    #returns a list of all nodes in the 
+    #returns a list of all nodes in the workflow
     def all_modules(self):
         mod_list = []
         open_list = [self.flow.init]

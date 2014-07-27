@@ -50,6 +50,14 @@ class Agent(object):
         flow.launch()
         return flow.id
 
+    def testWorkflow(self, workflowName):
+        try:
+            flow = workflow.Workflow(0, workflowName,'test')
+            print(flow)
+        except Exception as e:
+            print(e)
+            logging.exception(e)
+
     def finishWorkflow(self, workflowDir):
         return True
 
@@ -122,6 +130,12 @@ if __name__ == "__main__":
                 i += 2
                 continue
 
+            if(sys.argv[i] == "-t" and i+1 < len(sys.argv)):
+                logging.info("called agent with -t (test workflow):"+sys.argv[i+1])
+                agent.testWorkflow(sys.argv[i+1])
+                i += 2
+                continue
+
             if(sys.argv[i] == "-u" and i+1 < len(sys.argv)):
                 logging.info("called agent with -u (update state):"+sys.argv[i+1])
                 task_id = agent.updateState(int(sys.argv[i+1]))
@@ -183,7 +197,12 @@ if __name__ == "__main__":
         print("for your conveniency...:")
         print(e)
         print("--------")
-
+        
+        #print log last elements
+        from collections import deque
+        tail = deque(open("agent.log",'r'), 10)
+        for line in tail:
+            print(line,end="")
     finally:
         if os.path.exists(settings.global_filelock_path):
             os.remove(settings.global_filelock_path)

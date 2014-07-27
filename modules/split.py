@@ -26,10 +26,5 @@ def launch(output_dir):
 def collect(output_dir):
     print ("collect init from:"+output_dir)
 
-
-def __getitem__(self, index):
-    return index
-
-
 if __name__ == "__main__":
     print("no test here for main...")

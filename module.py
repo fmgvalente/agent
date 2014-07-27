@@ -5,7 +5,7 @@ import os
 
 class Module:
 
-    def __init__(self, module_name, id, *arguments, **keywords):
+    def __init__(self, module_name, id, **keywords):
         self.module_name = module_name
         self.id = id
         self.output_modules = []
@@ -14,26 +14,30 @@ class Module:
         self.is_running = False
         self.has_finished = False
         self.mod = None
+        self.channel = -1    #specifies which of the output ports is used to obtain data
 
-        #assumes directory exists
-    def launch(self, output_dir):
-        self.basepath = output_dir
+        #checks for module existence
         try:
             self.mod = __import__(self.module_name, globals(), locals())
         except Exception as e:
-            logging.error("failure importing module {}".format(self.module_name))
-            logging.exception(e)
-            raise Exception("failure importing module {}, check log".format(self.module_name))
+            raise Exception("failure importing module {}".format(self.module_name))
 
+        #obtains an input=* optional argument and adds it to its list of dependencies
+        #this is convinient when creating workflows by hand
+        if 'input' in keywords:
+            for dependency in keywords['input']:
+                dependency >> self
+
+
+    #assumes directory exists, created by workflow
+    #assumes module source is already imported in self.mod (done in constructor)
+    def launch(self, output_dir):
+        self.basepath = output_dir
         open(self.basepath+"/_state_running", "w")
         self.is_running = True
-        print(dir(self))
-        print(output_dir)
-        print(repr(self.mod))
-        print(dir(self.mod))
         self.mod.launch(self.basepath)
 
-    def collect(self):
+    def data(self):
         pass
 
     def __rshift__(self, other):
@@ -49,17 +53,31 @@ class Module:
             self.has_finished = True
 
     def __repr__(self):
-        return self.module_name+" "+str(self.id)
+        return "Module:"+self.module_name+" id="+str(self.id)+" channel:"+str(self.channel)+"\n\t"
 
     def __str__(self):
-        return self.module_name+" "+str(self.id)
+        retstr = repr(self)
+        retstr += "\n\tin:" + str(self.input_modules)
+        retstr += "\n\tout:"+ str(self.output_modules)
+        retstr += "\n-----"+self.module_name+"-----\n"
+        return retstr
 
     def __getitem__(self, index):
-        return index
+        copyModule = Module(self.module_name,self.id)
+        copyModule.output_modules = self.output_modules
+        copyModule.input_modules = self.input_modules
+        copyModule.workflow_dir = self.workflow_dir
+        copyModule.is_running = self.is_running
+        copyModule.has_finished = self.has_finished
+        copyModule.mod = self.mod
+        copyModule.channel = index    #specifies which of the output ports is used to obtain data
+        return copyModule
+
 
 
 if __name__ == "__main__":
     sys.path.append("modules")
     print("testing module loading")
-    x = Module("void")
-    x.launch("test")
+    x = Module("void",33,input=[Module("zeca",79,input=[]),Module("poca",69)])
+    print(x)
+    #x.launch("test")
