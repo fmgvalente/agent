@@ -1,6 +1,6 @@
 
 def create_execution_script():
-    return "echo REPORT\n"    
+    return "echo TESTAMLS\n"    
 
 # def launch(output_dir):
     

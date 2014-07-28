@@ -39,4 +39,7 @@ finit          = Module('finit', 23, input=[report])
 #edges can be defined as input = name in module definition area
 #or here using operator >>
 init   >>   ds
+init   >>   svm_a
+init   >>   svm_b
+init   >>   svm_c
 ds     >>   split

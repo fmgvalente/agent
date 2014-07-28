@@ -18,7 +18,7 @@ import time
 
 #sets up the debug level
 #TODO:this should be moved or read from a config file or entry parameter
-logging.basicConfig(filename='agent.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename=settings.agent_path+'/agent.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 class Agent(object):
@@ -88,6 +88,7 @@ class Agent(object):
 
 if __name__ == "__main__":
     logging.info("NEW RUN: called agent with: "+repr(sys.argv))
+#    print(sys.version_info)
 
     #wait on file lock
     #this sucks, I know it, you know it, lets just ignore it, hopefully it will go away eventually (it likely wont)
@@ -200,9 +201,9 @@ if __name__ == "__main__":
         
         #print log last elements
         from collections import deque
-        tail = deque(open("agent.log",'r'), 10)
+        tail = deque(open(settings.agent_path+'/agent.log','r'), 10)
         for line in tail:
-            print(line,end="")
+            print(line, end=" ")
     finally:
         if os.path.exists(settings.global_filelock_path):
             os.remove(settings.global_filelock_path)

@@ -1,29 +1,29 @@
-import subprocess
-import settings
-import logging
 
-def launch(output_dir):
+def create_execution_script():
+    return "echo REPORT\n"    
+
+# def launch(output_dir):
     
-    logging.info("launching csv to:"+output_dir)
+#     logging.info("launching void to:"+output_dir)
+#     file = open(output_dir+"/launch.sh",'w')
 
-    file = open(output_dir+"/launch.sh",'w')
+#     script = "#!/bin/sh\n"
+#     script += "#SBATCH --nodes=2\n"
+#     script += "#SBATCH --partition=gpu.test\n"
+#     script += "srun hostname>{}/ff\n".format(output_dir)
+#     script += "sleep 10\n"
+#     script += "touch {}\n".format(output_dir+"/_state_finished")
+#     script += "agent -ud {}".format(output_dir)
 
-    script = "#!/bin/sh\n"
-    script += "#SBATCH --nodes=1\n"
-    script += "#SBATCH --partition=gpu.test\n"
-    script += "hostname>{}/exec_node\n".format(output_dir)
-    script += "touch {}\n".format(output_dir+"/_state_finished")
-    script += "agent -ud {}".format(output_dir)
+#     file.write(script)
+#     file.close()
 
-    file.write(script)
-    file.close()
-
-    subprocess.Popen(["sh", output_dir+"/launch.sh"])
+#     subprocess.Popen(["sbatch", output_dir+"/launch.sh"])
 
 
-def collect(output_dir):
-    print ("collect csv from:"+output_dir)
 
+def data(output_dir):
+    print ("collect init from:"+output_dir)
 
 if __name__ == "__main__":
     print("no test here for main...")

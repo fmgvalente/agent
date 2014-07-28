@@ -15,12 +15,14 @@ class Module:
         self.has_finished = False
         self.mod = None
         self.channel = -1    #specifies which of the output ports is used to obtain data
+        self.maps = {}
 
         #checks for module existence
         try:
             self.mod = __import__(self.module_name, globals(), locals())
         except Exception as e:
-            raise Exception("failure importing module {}".format(self.module_name))
+            excstr = "failure importing module {}".format(self.module_name)
+            raise Exception(excstr)
 
         #obtains an input=* optional argument and adds it to its list of dependencies
         #this is convinient when creating workflows by hand
@@ -28,14 +30,11 @@ class Module:
             for dependency in keywords['input']:
                 dependency >> self
 
+    def create_execution_script(self):
+        print("IN MOTHAFRACKING: "+self.module_name)
+        return self.mod.create_execution_script()
 
-    #assumes directory exists, created by workflow
-    #assumes module source is already imported in self.mod (done in constructor)
-    def launch(self, output_dir):
-        self.basepath = output_dir
-        open(self.basepath+"/_state_running", "w")
-        self.is_running = True
-        self.mod.launch(self.basepath)
+
 
     def data(self):
         pass
@@ -44,16 +43,8 @@ class Module:
         other.input_modules.append(self)
         self.output_modules.append(other)
 
-    def updateState(self, output_dir):
-        if(glob.glob(output_dir+'/_state_running')):
-            self.is_running = True
-
-        if(glob.glob(output_dir+'/_state_finished')):
-            self.is_running = False
-            self.has_finished = True
-
     def __repr__(self):
-        return "Module:"+self.module_name+" id="+str(self.id)+" channel:"+str(self.channel)+"\n\t"
+        return "Module:"+self.module_name+" id="+str(self.id)+" channel:"+str(self.channel)+" finished:"+str(self.has_finished)+"\n\t"
 
     def __str__(self):
         retstr = repr(self)
@@ -62,17 +53,20 @@ class Module:
         retstr += "\n-----"+self.module_name+"-----\n"
         return retstr
 
-    def __getitem__(self, index):
-        copyModule = Module(self.module_name,self.id)
-        copyModule.output_modules = self.output_modules
-        copyModule.input_modules = self.input_modules
-        copyModule.workflow_dir = self.workflow_dir
-        copyModule.is_running = self.is_running
-        copyModule.has_finished = self.has_finished
-        copyModule.mod = self.mod
-        copyModule.channel = index    #specifies which of the output ports is used to obtain data
-        return copyModule
+    # def __getitem__(self, index):
+    #     copyModule = Module(self.module_name, self.id)
+    #     copyModule.output_modules = self.output_modules
+    #     copyModule.input_modules = self.input_modules
+    #     copyModule.workflow_dir = self.workflow_dir
+    #     copyModule.is_running = self.is_running
+    #     copyModule.has_finished = self.has_finished
+    #     copyModule.mod = self.mod
+    #     copyModule.channel = index    #specifies which of the output ports is used to obtain data
+    #     return copyModule
 
+    def __getitem__(self, index):
+        #self.maps
+        return self
 
 
 if __name__ == "__main__":
