@@ -154,7 +154,6 @@ if __name__ == "__main__":
                 logging.info(path_component)
                 logging.info(path_component.split('_')[1])
                 flowid = int(path_component.split('_')[1])
-                print(flowid)
                 logging.info("calling updateState with workflow {} ".format(flowid))
                 agent.updateState(flowid)
                 i += 2

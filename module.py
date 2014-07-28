@@ -30,11 +30,11 @@ class Module:
             for dependency in keywords['input']:
                 dependency >> self
 
+    # asks the script attached to this module to give us a script
+    # that script is ready to be launched on the grid
     def create_execution_script(self):
-        print("IN MOTHAFRACKING: "+self.module_name)
+        logging.info("creating execution script for: "+self.module_name)
         return self.mod.create_execution_script()
-
-
 
     def data(self):
         pass

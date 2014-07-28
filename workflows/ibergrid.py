@@ -42,4 +42,7 @@ init   >>   ds
 init   >>   svm_a
 init   >>   svm_b
 init   >>   svm_c
+init   >>	tree
+init   >>	nb
+init   >>	sgd
 ds     >>   split

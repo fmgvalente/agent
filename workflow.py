@@ -76,7 +76,7 @@ class Workflow:
         return self.id
 
 
-
+    #synchs information stored on the file system with in-memory representation
     def updateModules(self):
         for mod in self.all_modules():
             if(glob.glob(self.output_dir(mod)+'/_state_running')):
@@ -86,14 +86,11 @@ class Workflow:
                 mod.is_running = False
                 mod.has_finished = True
 
-            print("state:")
-            print(mod)
-
+    #helper method that does exactly what the name implies
     def are_all_modules_finished(self):
         for mod in self.all_modules():
             if(not mod.has_finished):
-                print("WHY U NO FINISH?")
-                print(mod)
+                logging.info("checking for finished mods, this one is unfinished: " + repr(mod))
                 return False
         return True
 
@@ -119,14 +116,11 @@ class Workflow:
         #get ready to fire actors
         modules_ready_to_fire = self.get_ready_to_fire()
         logging.info("Ready to fire actors:"+str(modules_ready_to_fire))
-        print("Ready to fire actors:"+str(modules_ready_to_fire))
-        
-
 
         #dispatch them
         for mod in modules_ready_to_fire:
             logging.info("ready to fire and firing: {}".format(repr(mod)))
-            print(mod.module_name)
+            logging.info(mod.module_name)
             #first we instruct the module to create a script understandable by srun
             #we store it in the proper place on the workflow directory tree
             #also we add some state management functionality
@@ -192,7 +186,6 @@ class Workflow:
         while open_list:
             for m in open_list[:]:
                 if m not in mod_list:
-                    #print(m.module_name)
                     mod_list.append(m)
                 open_list = open_list + m.output_modules
                 open_list.remove(m)
