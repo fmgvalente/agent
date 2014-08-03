@@ -38,6 +38,8 @@ class Workflow:
             logging.error(e)
             raise
 
+        self.updateModules()
+
     def progress(self):
         return 0.0
 
@@ -86,12 +88,17 @@ class Workflow:
                 mod.is_running = False
                 mod.has_finished = True
 
+            mod.workdir = self.output_dir(mod)
+
+
+
     #helper method that does exactly what the name implies
     def are_all_modules_finished(self):
         for mod in self.all_modules():
             if(not mod.has_finished):
                 logging.info("checking for finished mods, this one is unfinished: " + repr(mod))
                 return False
+        logging.info("all modules have finished")
         return True
 
 
@@ -99,7 +106,7 @@ class Workflow:
     def updateState(self):
 
         if(self.has_finished):
-            logging.info("updating workflow {} but it has already finished...".format(self))
+            logging.info("updating workflow {} but it has already finished...".format(repr(self)))
             return
 
         #potentially changes state
@@ -115,12 +122,11 @@ class Workflow:
 
         #get ready to fire actors
         modules_ready_to_fire = self.get_ready_to_fire()
-        logging.info("Ready to fire actors:"+str(modules_ready_to_fire))
+        logging.info("Ready to fire actors:"+repr(modules_ready_to_fire))
 
         #dispatch them
         for mod in modules_ready_to_fire:
             logging.info("ready to fire and firing: {}".format(repr(mod)))
-            logging.info(mod.module_name)
             #first we instruct the module to create a script understandable by srun
             #we store it in the proper place on the workflow directory tree
             #also we add some state management functionality
@@ -128,8 +134,12 @@ class Workflow:
             #made by whichever machine executes them
             script_string = "#!/bin/sh\n"
             script_string += "touch {}/_state_running\n".format(self.output_dir(mod))
-            script_string += mod.create_execution_script()
-            script_string += "touch {}/_state_finished\n".format(self.output_dir(mod))
+            #script += "#SBATCH --nodes=1\n"
+            #script += "#SBATCH --partition=gpu.test\n"
+            script_string += "hostname>{}/exec_node\n".format(self.output_dir(mod))
+            print(mod)
+            script_string += mod.execution_script()
+            script_string += "\ntouch {}/_state_finished\n".format(self.output_dir(mod))
             #we add an instruction to create an agent update at the end of its execution
             script_string += "agent_watchdog {}\n".format(self.output_dir(mod))
 
@@ -141,7 +151,7 @@ class Workflow:
             #then we execute that script
             mod.is_running = True
             subprocess.Popen(["sh", self.output_dir(mod)+"/launch.sh"])
-            print("DONE: "+mod.module_name)
+            print("launched: "+mod.module_name + ", id:"+repr(mod.id))
 
     def initialize_persistent_data(self):
         os.makedirs(self.base_path, exist_ok=True)

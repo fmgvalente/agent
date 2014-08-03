@@ -1,6 +1,6 @@
 
-def create_execution_script():
-    return "\n"
+def create_execution_script(**options):
+    return "echo psvm script exec\n"
     #return "gvim\n"    
     #file = open(output_dir+"/launch.sh",'w')
 

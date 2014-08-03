@@ -99,7 +99,8 @@ if __name__ == "__main__":
     #the lock is removed in the finally clause
     while(True):
         if os.path.exists(settings.global_filelock_path):
-            print("lock exists. is another instance running? waiting a bit...")  #remove print after test
+            logging.info("lock exists. is another instance running? waiting a bit...")  #remove print after test
+            logging.info("this was caused by running: "+repr(sys.argv))
             time.sleep(1)
         else:
             lock = open(settings.global_filelock_path, "w")
@@ -200,7 +201,7 @@ if __name__ == "__main__":
         
         #print log last elements
         from collections import deque
-        tail = deque(open(settings.agent_path+'/agent.log','r'), 10)
+        tail = deque(open(settings.agent_path+'/agent.log','r'), 20)
         for line in tail:
             print(line, end=" ")
     finally:

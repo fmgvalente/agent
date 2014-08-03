@@ -1,6 +1,6 @@
 
-def create_execution_script():
-    return "echo REPORT\n"    
+def create_execution_script(**options):
+    return "echo FINIT\n"    
 
 # def launch(output_dir):
     

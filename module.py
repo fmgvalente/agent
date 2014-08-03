@@ -10,12 +10,12 @@ class Module:
         self.id = id
         self.output_modules = []
         self.input_modules = []
-        self.workflow_dir = None
+        self.workdir = None
         self.is_running = False
         self.has_finished = False
         self.mod = None
         self.channel = -1    #specifies which of the output ports is used to obtain data
-        self.maps = {}
+        self.options = keywords
 
         #checks for module existence
         try:
@@ -29,22 +29,23 @@ class Module:
         if 'input' in keywords:
             for dependency in keywords['input']:
                 dependency >> self
+            self.options.pop("input", None)
 
     # asks the script attached to this module to give us a script
     # that script is ready to be launched on the grid
-    def create_execution_script(self):
+    def execution_script(self):
         logging.info("creating execution script for: "+self.module_name)
-        return self.mod.create_execution_script()
+        return self.mod.create_execution_script(workdir=self.workdir, input=self.input_modules, **self.options)
 
-    def data(self):
-        pass
+    def data(self, **options):
+        return self.mod.data(self.workdir,**options)
 
     def __rshift__(self, other):
         other.input_modules.append(self)
         self.output_modules.append(other)
 
     def __repr__(self):
-        return "Module:"+self.module_name+" id="+str(self.id)+" channel:"+str(self.channel)+" finished:"+str(self.has_finished)+"\n\t"
+        return "Module:"+self.module_name+" id="+str(self.id)+" channel:"+str(self.channel)+" finished:"+str(self.has_finished) + " "+self.workdir
 
     def __str__(self):
         retstr = repr(self)

@@ -1,29 +1,39 @@
+import numpy as np
+import os
+import sys
 
-def create_execution_script():
-    return "echo REPORT\n"    
+def create_execution_script(**options):
 
-# def launch(output_dir):
-    
-#     logging.info("launching void to:"+output_dir)
-#     file = open(output_dir+"/launch.sh",'w')
+    inputs = options['input']
+    scores = []
 
-#     script = "#!/bin/sh\n"
-#     script += "#SBATCH --nodes=2\n"
-#     script += "#SBATCH --partition=gpu.test\n"
-#     script += "srun hostname>{}/ff\n".format(output_dir)
-#     script += "sleep 10\n"
-#     script += "touch {}\n".format(output_dir+"/_state_finished")
-#     script += "agent -ud {}".format(output_dir)
+    for input_element in inputs:
+        elem_data = input_element.data()
 
-#     file.write(script)
-#     file.close()
+        if 'datatype' in elem_data:
+            if(elem_data['datatype'] == 'test'):
+                scores.append(elem_data['score'])
+        else:
+            return "ERROR: input not expected"
 
-#     subprocess.Popen(["sbatch", output_dir+"/launch.sh"])
+    np.save(options['workdir']+'/scores', scores)
 
+    script_string="python3 "+ os.path.realpath(__file__) + " "+options['workdir']
+    return script_string    
 
-
-def data(output_dir):
-    print ("collect init from:"+output_dir)
+def data(workdir, **options):
+     pass
 
 if __name__ == "__main__":
-    print("no test here for main...")
+    workdir = sys.argv[1]
+
+    scores = np.load(workdir+"/scores.npy")
+
+    with open(workdir+"/report.txt","w") as f:
+        f.write("The score R^2 is defined as (1 - u/v), where u is the regression sum of squares ((y_true - y_pred) ** 2).sum() and v is the residual sum of squares ((y_true - y_true.mean()) ** 2).sum(). Best possible score is 1.0, lower values are worse.")
+        f.write("\n")
+
+        for v in scores:
+            f.write(str(v))
+            f.write("\n")
+
