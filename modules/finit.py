@@ -22,7 +22,7 @@ def create_execution_script(**options):
 
 
 
-def data(output_dir):
+def data(output_dir, channel=0, **options):
     print ("collect init from:"+output_dir)
 
 if __name__ == "__main__":

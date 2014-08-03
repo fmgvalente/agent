@@ -8,8 +8,9 @@ def create_execution_script(**options):
     from sklearn.externals import joblib
 
     inputs = options['input']
-    for input_element in inputs:
-        elem_data = input_element.data()
+    channels = options['channel']
+    for input_element, input_channel in zip(inputs,channels):
+        elem_data = input_element.data(input_channel)
 
         if 'datatype' in elem_data:
             if(elem_data['datatype'] == 'dataset'):
@@ -25,7 +26,7 @@ def create_execution_script(**options):
 
 
 
-def data(workdir, **options):
+def data(workdir, channel, **options):
     return {
         'datatype' : 'model',
         'model': joblib.load(workdir+"/trained.pkl")

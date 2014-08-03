@@ -8,10 +8,9 @@ def create_execution_script(**options):
 
 
 #needs to handle more divisions
-def data(workdir,**options):
-    channel = 0
-    if 'channel' in options:
-        channel = options['channel']
+def data(workdir,channel, **options):
+
+    print("data channel:"+str(channel))
 
     if channel==1:
         data = np.load(workdir+"/d1.npy")

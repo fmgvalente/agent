@@ -16,7 +16,7 @@ def create_execution_script(**options):
 	return script_string
 
 
-def data(workdir):
+def data(workdir, channel, **options):
 	classifier = joblib.load(workdir+"/svm.pkl") 
 	return { 'datatype' : 'model', 'model' : classifier}
 

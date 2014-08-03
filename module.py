@@ -8,13 +8,16 @@ class Module:
     def __init__(self, module_name, id, **keywords):
         self.module_name = module_name
         self.id = id
+        self.mod = None
+        
         self.output_modules = []
         self.input_modules = []
+        self.input_channels = []
+
         self.workdir = None
         self.is_running = False
         self.has_finished = False
-        self.mod = None
-        self.channel = -1    #specifies which of the output ports is used to obtain data
+
         self.options = keywords
 
         #checks for module existence
@@ -28,46 +31,52 @@ class Module:
         #this is convinient when creating workflows by hand
         if 'input' in keywords:
             for dependency in keywords['input']:
-                dependency >> self
-            self.options.pop("input", None)
+                self << dependency
+            self.options.pop("input", None) #removes from options, since it has already been dealt with
 
     # asks the script attached to this module to give us a script
     # that script is ready to be launched on the grid
     def execution_script(self):
         logging.info("creating execution script for: "+self.module_name)
-        return self.mod.create_execution_script(workdir=self.workdir, input=self.input_modules, **self.options)
+        return self.mod.create_execution_script(workdir=self.workdir, input=self.input_modules, channel=self.input_channels, **self.options)
 
-    def data(self, **options):
-        return self.mod.data(self.workdir,**options)
+    def data(self, channel, **options):
+        return self.mod.data(self.workdir, channel, **options)
 
     def __rshift__(self, other):
-        other.input_modules.append(self)
-        self.output_modules.append(other)
+            other.input_modules.append(self)
+            other.input_channels.append(0)
+            self.output_modules.append(other)
+
+    def __lshift__(self, other):
+        if isinstance(other, dict):
+            self.input_modules.append(other['module'])
+            self.input_channels.append(other['channel'])
+            other['module'].output_modules.append(self)
+        else:
+            self.input_modules.append(other)
+            self.input_channels.append(0)
+            other.output_modules.append(self)
+
 
     def __repr__(self):
-        return "Module:"+self.module_name+" id="+str(self.id)+" channel:"+str(self.channel)+" finished:"+str(self.has_finished) + " "+self.workdir
+        return "Module:"+str(self.module_name)+" id="+str(self.id)+" finished:"+str(self.has_finished) + " "+str(self.workdir)
 
     def __str__(self):
         retstr = repr(self)
         retstr += "\n\tin:" + str(self.input_modules)
+        retstr += "\n\tin_ports:" + str(self.input_channels)
         retstr += "\n\tout:"+ str(self.output_modules)
         retstr += "\n-----"+self.module_name+"-----\n"
         return retstr
 
-    # def __getitem__(self, index):
-    #     copyModule = Module(self.module_name, self.id)
-    #     copyModule.output_modules = self.output_modules
-    #     copyModule.input_modules = self.input_modules
-    #     copyModule.workflow_dir = self.workflow_dir
-    #     copyModule.is_running = self.is_running
-    #     copyModule.has_finished = self.has_finished
-    #     copyModule.mod = self.mod
-    #     copyModule.channel = index    #specifies which of the output ports is used to obtain data
-    #     return copyModule
-
     def __getitem__(self, index):
-        #self.maps
-        return self
+        x = {
+            'channel' : index,
+            'module' : self
+        }
+        return x
+
 
 
 if __name__ == "__main__":

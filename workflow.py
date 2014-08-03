@@ -137,7 +137,7 @@ class Workflow:
             #script += "#SBATCH --nodes=1\n"
             #script += "#SBATCH --partition=gpu.test\n"
             script_string += "hostname>{}/exec_node\n".format(self.output_dir(mod))
-            print(mod)
+            #print(mod)
             script_string += mod.execution_script()
             script_string += "\ntouch {}/_state_finished\n".format(self.output_dir(mod))
             #we add an instruction to create an agent update at the end of its execution

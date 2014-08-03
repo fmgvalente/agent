@@ -19,7 +19,7 @@ def create_execution_script(**options):
 
 
 #returns something out of the results of script execution
-def data(workdir, **options):
+def data(workdir, channel, **options):
 	import numpy as np
 	return {
 		'datatype': 'dataset',

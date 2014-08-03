@@ -17,7 +17,7 @@ def create_execution_script(**options):
     #subprocess.Popen(["sh", output_dir+"/launch.sh"])
 
 
-def data(output_dir):
+def data(workdir, channel, **options):
     print ("collect init from:"+output_dir)
     return {}
 

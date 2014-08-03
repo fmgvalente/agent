@@ -5,10 +5,10 @@ import sys
 def create_execution_script(**options):
 
     inputs = options['input']
+    channels = options['channel']
     scores = []
-
-    for input_element in inputs:
-        elem_data = input_element.data()
+    for input_element, input_channel in zip(inputs,channels):
+        elem_data = input_element.data(input_channel)
 
         if 'datatype' in elem_data:
             if(elem_data['datatype'] == 'test'):
@@ -21,7 +21,7 @@ def create_execution_script(**options):
     script_string="python3 "+ os.path.realpath(__file__) + " "+options['workdir']
     return script_string    
 
-def data(workdir, **options):
+def data(workdir, channel, **options):
      pass
 
 if __name__ == "__main__":

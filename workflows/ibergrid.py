@@ -26,12 +26,12 @@ test_svm_a     = Module('test', 16, input=[train_svm_a, split[1]])
 test_svm_b     = Module('test', 17, input=[train_svm_b, split[1]])
 test_svm_c     = Module('test', 18, input=[train_svm_c, split[1]])
 test_sgd       = Module('test', 20, input=[train_sgd, split[1]])
-test_nb        = Module('test', 20, input=[train_nb, split[1]])
-test_tree      = Module('test', 21, input=[train_tree, split[1]])
+test_nb        = Module('test', 21, input=[train_nb, split[1]])
+test_tree      = Module('test', 22, input=[train_tree, split[1]])
 
 #conclusion of experiment and report generation
-report         = Module('report',22, input=[test_svm_a, test_svm_b, test_svm_c, test_sgd, test_nb, test_tree])
-finit          = Module('finit', 23, input=[report])
+report         = Module('report',23, input=[test_svm_a, test_svm_b, test_svm_c, test_sgd, test_nb, test_tree])
+finit          = Module('finit', 24, input=[report])
 
 #edge definition area
 #edges can be defined as input = name in module definition area
