@@ -6,8 +6,8 @@ ds		= Module('dataset',2,	type='csv', src='bcdr_01.csv', field=-1)
 split	= Module('split',3,		ratio=0.7, strategy='random')
 
 #classifiers used in experiment
-svm_a   = Module('svm',4,		kernel='rbf', gamma=3)
-svm_b   = Module('svm',5,		kernel='linear', c=2)
+svm_a   = Module('svm',4,		kernel='rbf', gamma=3, C=1)
+svm_b   = Module('svm',5,		kernel='linear', C=1)
 svm_c   = Module('svm',6)
 nb      = Module('naive_bayes',7)
 sgd     = Module('sgd',8)
